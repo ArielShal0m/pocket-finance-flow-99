@@ -1,10 +1,13 @@
-
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, PieChart, DollarSign, BarChart3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import LoginModal from '@/components/LoginModal';
 
 const Home = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       {/* Header */}
@@ -15,11 +18,19 @@ const Home = () => {
               <DollarSign className="h-8 w-8 text-primary" />
               <h1 className="text-2xl font-bold text-foreground">FinanceFlow</h1>
             </div>
-            <Link to="/dashboard">
-              <Button size="lg">
-                Entrar no Sistema
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                onClick={() => setIsLoginModalOpen(true)}
+              >
+                Entrar
               </Button>
-            </Link>
+              <Link to="/dashboard">
+                <Button size="lg">
+                  Entrar no Sistema
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -35,11 +46,20 @@ const Home = () => {
             Gerencie suas receitas, despesas e investimentos de forma simples e eficiente. 
             Tenha controle total do seu dinheiro com relatórios detalhados e gráficos intuitivos.
           </p>
-          <Link to="/dashboard">
-            <Button size="lg" className="text-lg px-8 py-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="text-lg px-8 py-4"
+              onClick={() => setIsLoginModalOpen(true)}
+            >
               Começar Agora
             </Button>
-          </Link>
+            <Link to="/dashboard">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+                Ver Demo
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -98,11 +118,14 @@ const Home = () => {
           <p className="text-xl mb-8 opacity-90">
             Comece agora mesmo a organizar suas finanças de forma profissional
           </p>
-          <Link to="/dashboard">
-            <Button variant="secondary" size="lg" className="text-lg px-8 py-4">
-              Acessar Sistema
-            </Button>
-          </Link>
+          <Button 
+            variant="secondary" 
+            size="lg" 
+            className="text-lg px-8 py-4"
+            onClick={() => setIsLoginModalOpen(true)}
+          >
+            Criar Conta Grátis
+          </Button>
         </div>
       </section>
 
@@ -114,6 +137,12 @@ const Home = () => {
           </p>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal 
+        open={isLoginModalOpen} 
+        onOpenChange={setIsLoginModalOpen} 
+      />
     </div>
   );
 };
