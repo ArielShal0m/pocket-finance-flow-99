@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { TrendingUp, PieChart, DollarSign, BarChart3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import LoginModal from '@/components/LoginModal';
+import PricingSection from '@/components/PricingSection';
 
 const Home = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -108,6 +109,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Pricing Section */}
+      <PricingSection />
 
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
