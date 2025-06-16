@@ -9,7 +9,118 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      plan_upgrades: {
+        Row: {
+          from_plan: Database["public"]["Enums"]["subscription_plan"]
+          id: string
+          price_paid: number | null
+          to_plan: Database["public"]["Enums"]["subscription_plan"]
+          upgraded_at: string
+          user_id: string
+        }
+        Insert: {
+          from_plan: Database["public"]["Enums"]["subscription_plan"]
+          id?: string
+          price_paid?: number | null
+          to_plan: Database["public"]["Enums"]["subscription_plan"]
+          upgraded_at?: string
+          user_id: string
+        }
+        Update: {
+          from_plan?: Database["public"]["Enums"]["subscription_plan"]
+          id?: string
+          price_paid?: number | null
+          to_plan?: Database["public"]["Enums"]["subscription_plan"]
+          upgraded_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_upgrades_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          current_plan: Database["public"]["Enums"]["subscription_plan"]
+          email: string | null
+          full_name: string | null
+          id: string
+          plan_started_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          current_plan?: Database["public"]["Enums"]["subscription_plan"]
+          email?: string | null
+          full_name?: string | null
+          id: string
+          plan_started_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          current_plan?: Database["public"]["Enums"]["subscription_plan"]
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          plan_started_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string
+          id: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          date?: string
+          description: string
+          id?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +129,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      subscription_plan: "bronze" | "silver" | "gold"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +244,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      subscription_plan: ["bronze", "silver", "gold"],
+    },
   },
 } as const

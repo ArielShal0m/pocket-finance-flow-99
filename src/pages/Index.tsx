@@ -1,11 +1,12 @@
 
-import { useFinanceData } from '@/hooks/useFinanceData';
+import { useSupabaseFinanceData } from '@/hooks/useSupabaseFinanceData';
 import { FinancialSummaryCards } from '@/components/FinancialSummaryCards';
 import { AddTransactionForm } from '@/components/AddTransactionForm';
 import { TransactionList } from '@/components/TransactionList';
 import { ExpenseChart } from '@/components/ExpenseChart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DashboardInsights from '@/components/DashboardInsights';
 import MonthlyPerformance from '@/components/MonthlyPerformance';
@@ -13,9 +14,12 @@ import BronzeDashboard from '@/components/BronzeDashboard';
 import SilverDashboard from '@/components/SilverDashboard';
 import GoldDashboard from '@/components/GoldDashboard';
 import { usePlan } from '@/contexts/PlanContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { LogOut, User } from 'lucide-react';
 
 const Index = () => {
   const { currentPlan } = usePlan();
+  const { signOut, profile } = useAuth();
   const {
     transactions,
     isLoading,
@@ -23,7 +27,11 @@ const Index = () => {
     deleteTransaction,
     getFinancialSummary,
     getCategorySpending,
-  } = useFinanceData();
+  } = useSupabaseFinanceData();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   if (isLoading) {
     return (
@@ -69,14 +77,32 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            Gerenciador Financeiro
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Controle suas finanças de forma simples e eficiente
-          </p>
+        {/* Header with User Info */}
+        <div className="flex justify-between items-center">
+          <div className="text-center flex-1">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
+              Gerenciador Financeiro
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              Controle suas finanças de forma simples e eficiente
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <User className="h-4 w-4" />
+              <span>{profile?.full_name || profile?.email}</span>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleSignOut}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Sair
+            </Button>
+          </div>
         </div>
 
         {/* Plan-specific Dashboard */}

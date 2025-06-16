@@ -4,9 +4,27 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, ArrowUp } from 'lucide-react';
 import { usePlan } from '@/contexts/PlanContext';
+import { useToast } from '@/hooks/use-toast';
 
 const BronzeDashboard = () => {
-  const { setCurrentPlan } = usePlan();
+  const { setCurrentPlan, loading } = usePlan();
+  const { toast } = useToast();
+
+  const handleUpgrade = async () => {
+    try {
+      await setCurrentPlan('silver');
+      toast({
+        title: "Upgrade realizado!",
+        description: "Você agora tem acesso ao plano Silver.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro no upgrade",
+        description: "Não foi possível fazer o upgrade. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -19,11 +37,12 @@ const BronzeDashboard = () => {
               <span>Plano Básico</span>
             </div>
             <Button 
-              onClick={() => setCurrentPlan('silver')}
+              onClick={handleUpgrade}
+              disabled={loading}
               className="bg-primary hover:bg-primary/90"
             >
               <ArrowUp className="h-4 w-4 mr-2" />
-              Fazer Upgrade
+              {loading ? 'Carregando...' : 'Fazer Upgrade'}
             </Button>
           </CardTitle>
         </CardHeader>
@@ -64,7 +83,8 @@ const BronzeDashboard = () => {
               variant="outline" 
               size="sm" 
               className="mt-2"
-              onClick={() => setCurrentPlan('silver')}
+              onClick={handleUpgrade}
+              disabled={loading}
             >
               Desbloquear
             </Button>

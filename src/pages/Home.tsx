@@ -1,111 +1,129 @@
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, PieChart, DollarSign, BarChart3 } from 'lucide-react';
-import LoginModal from '@/components/LoginModal';
-import SignUpModal from '@/components/SignUpModal';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TrendingUp, BarChart3, Shield, PiggyBank } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import PricingSection from '@/components/PricingSection';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Home = () => {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm">
+      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-2">
-              <DollarSign className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">FinanceFlow</h1>
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center gap-2">
+              <PiggyBank className="h-8 w-8 text-primary" />
+              <span className="text-xl font-bold">FinanceFlow</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button 
-                size="lg"
-                className="text-lg px-8 py-4"
-                onClick={() => setIsLoginModalOpen(true)}
-              >
-                Entrar
-              </Button>
+            <div className="flex items-center gap-4">
+              {user ? (
+                <Button onClick={() => navigate('/dashboard')}>
+                  Ir para Dashboard
+                </Button>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="outline">Entrar</Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button>Começar Grátis</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20">
+      <section className="py-20 bg-gradient-to-b from-background to-secondary/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-            Controle suas
-            <span className="text-primary block">Finanças Pessoais</span>
-          </h2>
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+            Controle suas finanças de forma{' '}
+            <span className="text-primary">inteligente</span>
+          </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Gerencie suas receitas, despesas e investimentos de forma simples e eficiente. 
-            Tenha controle total do seu dinheiro com relatórios detalhados e gráficos intuitivos.
+            O FinanceFlow ajuda você a gerenciar suas receitas e despesas com planos
+            personalizados para suas necessidades financeiras.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-4"
-              onClick={() => setIsSignUpModalOpen(true)}
-            >
-              Começar Agora
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="text-lg px-8 py-4"
-              onClick={() => setIsLoginModalOpen(true)}
-            >
-              Ver Demo
-            </Button>
-          </div>
+          <Button size="lg" onClick={handleGetStarted} className="text-lg px-8 py-6">
+            Começar Grátis
+          </Button>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-background/50">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold text-foreground mb-4">
-              Funcionalidades Principais
-            </h3>
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Recursos Poderosos para Controle Total
+            </h2>
             <p className="text-lg text-muted-foreground">
-              Tudo que você precisa para ter controle total das suas finanças
+              Escolha o plano ideal e tenha acesso a funcionalidades exclusivas
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-shadow">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Card>
               <CardHeader>
-                <TrendingUp className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Controle de Receitas e Despesas</CardTitle>
-                <CardDescription>
-                  Registre e acompanhe todas suas transações financeiras em tempo real
-                </CardDescription>
+                <TrendingUp className="h-8 w-8 text-primary mb-2" />
+                <CardTitle>Controle Básico</CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Gerencie suas receitas e despesas básicas com facilidade.
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card>
               <CardHeader>
-                <PieChart className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Gráficos e Relatórios</CardTitle>
-                <CardDescription>
-                  Visualize seus gastos por categoria com gráficos interativos e relatórios detalhados
-                </CardDescription>
+                <BarChart3 className="h-8 w-8 text-primary mb-2" />
+                <CardTitle>Gráficos Avançados</CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Visualize seus dados com gráficos detalhados e insights.
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card>
               <CardHeader>
-                <BarChart3 className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Análise Financeira</CardTitle>
-                <CardDescription>
-                  Acompanhe seu saldo, tendências de gastos e tome decisões mais inteligentes
-                </CardDescription>
+                <Shield className="h-8 w-8 text-primary mb-2" />
+                <CardTitle>Segurança Total</CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Seus dados protegidos com criptografia de ponta.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <PiggyBank className="h-8 w-8 text-primary mb-2" />
+                <CardTitle>Planos Flexíveis</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Escolha o plano perfeito para suas necessidades.
+                </p>
+              </CardContent>
             </Card>
           </div>
         </div>
@@ -116,52 +134,23 @@ const Home = () => {
 
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h3 className="text-3xl font-bold mb-6">
-            Pronto para transformar sua vida financeira?
-          </h3>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Pronto para transformar suas finanças?
+          </h2>
           <p className="text-xl mb-8 opacity-90">
-            Comece agora mesmo a organizar suas finanças de forma profissional
+            Comece gratuitamente hoje e veja a diferença que faz.
           </p>
           <Button 
-            variant="secondary" 
             size="lg" 
-            className="text-lg px-8 py-4"
-            onClick={() => setIsSignUpModalOpen(true)}
+            variant="secondary" 
+            onClick={handleGetStarted}
+            className="text-lg px-8 py-6"
           >
-            Criar Conta Grátis
+            Começar Agora
           </Button>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-background border-t py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-muted-foreground">
-            © 2025 FinanceFlow. Gerencie suas finanças com inteligência.
-          </p>
-        </div>
-      </footer>
-
-      {/* Login Modal */}
-      <LoginModal 
-        open={isLoginModalOpen} 
-        onOpenChange={setIsLoginModalOpen}
-        onSwitchToSignUp={() => {
-          setIsLoginModalOpen(false);
-          setIsSignUpModalOpen(true);
-        }}
-      />
-
-      {/* Sign Up Modal */}
-      <SignUpModal 
-        open={isSignUpModalOpen} 
-        onOpenChange={setIsSignUpModalOpen}
-        onSwitchToLogin={() => {
-          setIsSignUpModalOpen(false);
-          setIsLoginModalOpen(true);
-        }}
-      />
     </div>
   );
 };
