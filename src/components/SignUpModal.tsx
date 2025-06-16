@@ -5,24 +5,24 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Lock, Chrome } from 'lucide-react';
+import { Mail, Lock, Chrome, User } from 'lucide-react';
 
-interface LoginModalProps {
+interface SignUpModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSwitchToSignUp: () => void;
+  onSwitchToLogin: () => void;
 }
 
-const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) => {
-  const handleGoogleLogin = () => {
-    // Implementar login com Google aqui
-    console.log('Login com Google');
+const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) => {
+  const handleGoogleSignUp = () => {
+    // Implementar cadastro com Google aqui
+    console.log('Cadastro com Google');
   };
 
-  const handleEmailLogin = (e: React.FormEvent) => {
+  const handleEmailSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementar login com email aqui
-    console.log('Login com email');
+    // Implementar cadastro com email aqui
+    console.log('Cadastro com email');
   };
 
   return (
@@ -30,14 +30,14 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold">
-            Entrar no FinanceFlow
+            Criar Conta no FinanceFlow
           </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
-          {/* Login com Google */}
+          {/* Cadastro com Google */}
           <Button 
-            onClick={handleGoogleLogin}
+            onClick={handleGoogleSignUp}
             variant="outline" 
             className="w-full h-12 text-base font-medium"
           >
@@ -56,8 +56,22 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
             </div>
           </div>
 
-          {/* Login com Email */}
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          {/* Cadastro com Email */}
+          <form onSubmit={handleEmailSignUp} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nome Completo</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Seu nome completo"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -86,18 +100,32 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+
             <Button type="submit" className="w-full h-12 text-base font-medium">
-              Entrar
+              Criar Conta
             </Button>
           </form>
 
           <div className="text-center text-sm text-muted-foreground">
-            Não tem uma conta?{' '}
+            Já tem uma conta?{' '}
             <button 
-              onClick={onSwitchToSignUp}
+              onClick={onSwitchToLogin}
               className="text-primary hover:underline font-medium"
             >
-              Criar conta
+              Fazer login
             </button>
           </div>
         </div>
@@ -106,4 +134,4 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
   );
 };
 
-export default LoginModal;
+export default SignUpModal;

@@ -1,14 +1,15 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { CategorySpending } from '@/types/finance';
+import { CategorySpending, FinancialSummary } from '@/types/finance';
 import { PieChart as PieChartIcon } from 'lucide-react';
 
 interface ExpenseChartProps {
   categorySpending: CategorySpending[];
+  summary: FinancialSummary;
 }
 
-export const ExpenseChart = ({ categorySpending }: ExpenseChartProps) => {
+export const ExpenseChart = ({ categorySpending, summary }: ExpenseChartProps) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -31,20 +32,45 @@ export const ExpenseChart = ({ categorySpending }: ExpenseChartProps) => {
     return null;
   };
 
-  if (categorySpending.length === 0) {
+  // Prepare chart data with revenue first, then expenses
+  const chartData = [];
+  
+  // Add revenue as the first slice (green)
+  if (summary.totalIncome > 0) {
+    const total = summary.totalIncome + summary.totalExpenses;
+    chartData.push({
+      category: 'Receitas',
+      amount: summary.totalIncome,
+      percentage: (summary.totalIncome / total) * 100,
+      color: '#10B981' // Green
+    });
+  }
+  
+  // Add expenses with their colors
+  if (summary.totalExpenses > 0) {
+    const total = summary.totalIncome + summary.totalExpenses;
+    categorySpending.forEach(item => {
+      chartData.push({
+        ...item,
+        percentage: (item.amount / total) * 100
+      });
+    });
+  }
+
+  if (chartData.length === 0) {
     return (
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <PieChartIcon className="mr-2 h-5 w-5" />
-            Distribuição de Despesas
+            Distribuição Financeira
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <PieChartIcon className="mx-auto h-12 w-12 mb-4 opacity-50" />
-            <p>Nenhuma despesa registrada</p>
-            <p className="text-sm">Adicione algumas despesas para ver a distribuição</p>
+            <p>Nenhuma transação registrada</p>
+            <p className="text-sm">Adicione algumas transações para ver a distribuição</p>
           </div>
         </CardContent>
       </Card>
@@ -56,7 +82,7 @@ export const ExpenseChart = ({ categorySpending }: ExpenseChartProps) => {
       <CardHeader>
         <CardTitle className="flex items-center">
           <PieChartIcon className="mr-2 h-5 w-5" />
-          Distribuição de Despesas
+          Distribuição Financeira
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -66,7 +92,7 @@ export const ExpenseChart = ({ categorySpending }: ExpenseChartProps) => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={categorySpending}
+                  data={chartData}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -74,7 +100,7 @@ export const ExpenseChart = ({ categorySpending }: ExpenseChartProps) => {
                   paddingAngle={2}
                   dataKey="amount"
                 >
-                  {categorySpending.map((entry, index) => (
+                  {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -86,7 +112,7 @@ export const ExpenseChart = ({ categorySpending }: ExpenseChartProps) => {
           {/* Legend */}
           <div className="space-y-3">
             <h4 className="font-semibold mb-4">Categorias</h4>
-            {categorySpending.map((item, index) => (
+            {chartData.map((item, index) => (
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div

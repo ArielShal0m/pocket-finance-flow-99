@@ -1,13 +1,15 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, PieChart, DollarSign, BarChart3 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import LoginModal from '@/components/LoginModal';
+import SignUpModal from '@/components/SignUpModal';
 import PricingSection from '@/components/PricingSection';
 
 const Home = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
@@ -21,16 +23,12 @@ const Home = () => {
             </div>
             <div className="flex items-center space-x-4">
               <Button 
-                variant="ghost" 
+                size="lg"
+                className="text-lg px-8 py-4"
                 onClick={() => setIsLoginModalOpen(true)}
               >
                 Entrar
               </Button>
-              <Link to="/dashboard">
-                <Button size="lg">
-                  Entrar no Sistema
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
@@ -51,15 +49,18 @@ const Home = () => {
             <Button 
               size="lg" 
               className="text-lg px-8 py-4"
-              onClick={() => setIsLoginModalOpen(true)}
+              onClick={() => setIsSignUpModalOpen(true)}
             >
               Começar Agora
             </Button>
-            <Link to="/dashboard">
-              <Button variant="outline" size="lg" className="text-lg px-8 py-4">
-                Ver Demo
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="text-lg px-8 py-4"
+              onClick={() => setIsLoginModalOpen(true)}
+            >
+              Ver Demo
+            </Button>
           </div>
         </div>
       </section>
@@ -126,7 +127,7 @@ const Home = () => {
             variant="secondary" 
             size="lg" 
             className="text-lg px-8 py-4"
-            onClick={() => setIsLoginModalOpen(true)}
+            onClick={() => setIsSignUpModalOpen(true)}
           >
             Criar Conta Grátis
           </Button>
@@ -145,7 +146,21 @@ const Home = () => {
       {/* Login Modal */}
       <LoginModal 
         open={isLoginModalOpen} 
-        onOpenChange={setIsLoginModalOpen} 
+        onOpenChange={setIsLoginModalOpen}
+        onSwitchToSignUp={() => {
+          setIsLoginModalOpen(false);
+          setIsSignUpModalOpen(true);
+        }}
+      />
+
+      {/* Sign Up Modal */}
+      <SignUpModal 
+        open={isSignUpModalOpen} 
+        onOpenChange={setIsSignUpModalOpen}
+        onSwitchToLogin={() => {
+          setIsSignUpModalOpen(false);
+          setIsLoginModalOpen(true);
+        }}
       />
     </div>
   );

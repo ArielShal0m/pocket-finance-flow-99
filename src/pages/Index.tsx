@@ -6,6 +6,9 @@ import { TransactionList } from '@/components/TransactionList';
 import { ExpenseChart } from '@/components/ExpenseChart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import DashboardInsights from '@/components/DashboardInsights';
+import MonthlyPerformance from '@/components/MonthlyPerformance';
 
 const Index = () => {
   const {
@@ -61,21 +64,40 @@ const Index = () => {
         {/* Financial Summary */}
         <FinancialSummaryCards summary={summary} />
 
-        {/* Add Transaction Form */}
-        <AddTransactionForm onAddTransaction={addTransaction} />
+        {/* Dashboard Tabs */}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+            <TabsTrigger value="insights">Insights</TabsTrigger>
+            <TabsTrigger value="performance">Performance Mensal</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-8">
+            {/* Add Transaction Form */}
+            <AddTransactionForm onAddTransaction={addTransaction} />
 
-        {/* Charts and Analysis */}
-        {transactions.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
-            <ExpenseChart categorySpending={categorySpending} />
-          </div>
-        )}
+            {/* Charts and Analysis */}
+            {transactions.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
+                <ExpenseChart categorySpending={categorySpending} summary={summary} />
+              </div>
+            )}
 
-        {/* Transaction List */}
-        <TransactionList 
-          transactions={transactions} 
-          onDeleteTransaction={deleteTransaction}
-        />
+            {/* Transaction List */}
+            <TransactionList 
+              transactions={transactions} 
+              onDeleteTransaction={deleteTransaction}
+            />
+          </TabsContent>
+          
+          <TabsContent value="insights">
+            <DashboardInsights summary={summary} categorySpending={categorySpending} />
+          </TabsContent>
+          
+          <TabsContent value="performance">
+            <MonthlyPerformance summary={summary} transactions={transactions} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

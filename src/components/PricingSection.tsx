@@ -11,50 +11,54 @@ const PricingSection = () => {
 
   const plans = [
     {
-      name: 'Básico',
-      description: 'Perfeito para iniciantes e exploradores',
-      monthlyPrice: 40,
-      annualPrice: 384,
-      color: 'bg-green-50 border-green-200',
-      buttonColor: 'bg-green-500 hover:bg-green-600',
+      name: 'Bronze',
+      description: 'Perfeito para quem está começando',
+      monthlyPrice: 29,
+      annualPrice: 290,
+      color: 'bg-orange-50 border-orange-200',
+      buttonColor: 'bg-orange-500 hover:bg-orange-600',
       features: [
-        '5.000 tokens/mês',
-        'Imagens públicas',
-        'Modelos comunitários',
-        'Suporte básico por e-mail'
+        'Controle básico de receitas e despesas',
+        'Gráficos simples de distribuição',
+        'Relatórios mensais',
+        'Suporte por email',
+        'Até 100 transações/mês'
       ]
     },
     {
-      name: 'Recomendado',
-      description: 'Ideal para criadores frequentes',
-      monthlyPrice: 60,
-      annualPrice: 576,
+      name: 'Silver',
+      description: 'Ideal para usuários regulares',
+      monthlyPrice: 49,
+      annualPrice: 490,
       color: 'bg-primary/10 border-primary ring-2 ring-primary/20',
       buttonColor: 'bg-primary hover:bg-primary/90',
       isPopular: true,
       features: [
-        '15.000 tokens/mês',
-        'Imagens privadas liberadas',
-        'Geração ilimitada com ritmo moderado',
-        'Treinamento de até 5 modelos',
-        'Suporte priorizado',
-        'Acesso antecipado a novos recursos'
+        'Controle completo de finanças',
+        'Gráficos avançados e insights',
+        'Relatórios detalhados e personalizados',
+        'Categorização automática',
+        'Transações ilimitadas',
+        'Suporte prioritário',
+        'Exportação de dados'
       ]
     },
     {
-      name: 'Pro',
-      description: 'Para profissionais e agências',
-      monthlyPrice: 100,
-      annualPrice: 960,
-      color: 'bg-green-50 border-green-200',
-      buttonColor: 'bg-green-500 hover:bg-green-600',
+      name: 'Gold',
+      description: 'Para profissionais e empresários',
+      monthlyPrice: 79,
+      annualPrice: 790,
+      color: 'bg-yellow-50 border-yellow-300',
+      buttonColor: 'bg-yellow-500 hover:bg-yellow-600',
       features: [
-        '30.000 tokens/mês',
-        'Geração ilimitada de imagem e vídeo',
-        'Compartilhamento com equipe',
-        'Treinamento avançado de modelos',
-        'Suporte premium (chat + e-mail)',
-        'Segurança empresarial'
+        'Todos os recursos do Silver',
+        'Análise preditiva de gastos',
+        'Alertas personalizados',
+        'Dashboard executivo',
+        'Integração com bancos',
+        'Múltiplas contas',
+        'Suporte 24/7',
+        'Consultoria financeira mensal'
       ]
     }
   ];
@@ -95,7 +99,7 @@ const PricingSection = () => {
           {isAnnual && (
             <div className="flex items-center justify-center gap-1 text-sm font-medium text-primary">
               <Flame className="h-4 w-4" />
-              Economize até 20%
+              Economize até 17%
             </div>
           )}
         </div>
@@ -117,7 +121,7 @@ const PricingSection = () => {
                 {plan.isPopular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-primary text-primary-foreground px-4 py-1">
-                      Mais Popular
+                      Recomendado
                     </Badge>
                   </div>
                 )}
@@ -157,7 +161,7 @@ const PricingSection = () => {
                     className={`w-full mb-6 ${plan.buttonColor} text-white`}
                     size="lg"
                   >
-                    Assinar Agora
+                    Assinar {plan.name}
                   </Button>
 
                   <ul className="space-y-3">
