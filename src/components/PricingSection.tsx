@@ -13,8 +13,9 @@ const PricingSection = () => {
     {
       name: 'Bronze',
       description: 'Perfeito para quem está começando',
-      monthlyPrice: 29,
-      annualPrice: 290,
+      monthlyPrice: 30,
+      discountedPrice: 24,
+      annualPrice: 240,
       color: 'bg-orange-50 border-orange-200',
       buttonColor: 'bg-orange-500 hover:bg-orange-600',
       features: [
@@ -28,8 +29,9 @@ const PricingSection = () => {
     {
       name: 'Silver',
       description: 'Ideal para usuários regulares',
-      monthlyPrice: 49,
-      annualPrice: 490,
+      monthlyPrice: 50,
+      discountedPrice: 40,
+      annualPrice: 400,
       color: 'bg-primary/10 border-primary ring-2 ring-primary/20',
       buttonColor: 'bg-primary hover:bg-primary/90',
       isPopular: true,
@@ -46,8 +48,9 @@ const PricingSection = () => {
     {
       name: 'Gold',
       description: 'Para profissionais e empresários',
-      monthlyPrice: 79,
-      annualPrice: 790,
+      monthlyPrice: 80,
+      discountedPrice: 64,
+      annualPrice: 640,
       color: 'bg-yellow-50 border-yellow-300',
       buttonColor: 'bg-yellow-500 hover:bg-yellow-600',
       features: [
@@ -99,7 +102,7 @@ const PricingSection = () => {
           {isAnnual && (
             <div className="flex items-center justify-center gap-1 text-sm font-medium text-primary">
               <Flame className="h-4 w-4" />
-              Economize até 17%
+              Economize até 20%
             </div>
           )}
         </div>
@@ -107,8 +110,8 @@ const PricingSection = () => {
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
-            const currentPrice = isAnnual ? plan.annualPrice : plan.monthlyPrice;
-            const originalMonthlyTotal = plan.monthlyPrice * 12;
+            const currentPrice = isAnnual ? plan.annualPrice : plan.discountedPrice;
+            const originalPrice = isAnnual ? (plan.monthlyPrice * 12) : plan.monthlyPrice;
             const savings = calculateSavings(plan.monthlyPrice, plan.annualPrice);
 
             return (
@@ -135,12 +138,13 @@ const PricingSection = () => {
                   </p>
                   
                   <div className="mt-4">
-                    <div className="flex items-center justify-center gap-2">
-                      {isAnnual && (
-                        <span className="text-sm text-muted-foreground line-through">
-                          R${originalMonthlyTotal}
-                        </span>
-                      )}
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <span className="text-lg text-muted-foreground line-through">
+                        R${originalPrice}
+                      </span>
+                      <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">
+                        20% OFF
+                      </span>
                     </div>
                     <div className="text-3xl font-bold text-foreground">
                       R${currentPrice}

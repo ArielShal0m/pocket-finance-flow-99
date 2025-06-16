@@ -9,8 +9,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DashboardInsights from '@/components/DashboardInsights';
 import MonthlyPerformance from '@/components/MonthlyPerformance';
+import BronzeDashboard from '@/components/BronzeDashboard';
+import SilverDashboard from '@/components/SilverDashboard';
+import GoldDashboard from '@/components/GoldDashboard';
+import { usePlan } from '@/contexts/PlanContext';
 
 const Index = () => {
+  const { currentPlan } = usePlan();
   const {
     transactions,
     isLoading,
@@ -48,6 +53,19 @@ const Index = () => {
   const summary = getFinancialSummary();
   const categorySpending = getCategorySpending();
 
+  const renderPlanDashboard = () => {
+    switch (currentPlan) {
+      case 'bronze':
+        return <BronzeDashboard />;
+      case 'silver':
+        return <SilverDashboard />;
+      case 'gold':
+        return <GoldDashboard />;
+      default:
+        return <BronzeDashboard />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -61,7 +79,10 @@ const Index = () => {
           </p>
         </div>
 
-        {/* Financial Summary */}
+        {/* Plan-specific Dashboard */}
+        {renderPlanDashboard()}
+
+        {/* Financial Summary - Available for all plans */}
         <FinancialSummaryCards summary={summary} />
 
         {/* Dashboard Tabs */}
