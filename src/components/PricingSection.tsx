@@ -14,8 +14,7 @@ const PricingSection = () => {
       name: 'Bronze',
       description: 'Perfeito para quem está começando',
       monthlyPrice: 29.99,
-      discountedMonthlyPrice: 24.99,
-      annualPrice: 24.99,
+      annualPrice: 24.99, // Valor da parcela mensal no plano anual
       color: 'bg-orange-50 border-orange-200',
       buttonColor: 'bg-orange-500 hover:bg-orange-600',
       features: [
@@ -30,8 +29,7 @@ const PricingSection = () => {
       name: 'Silver',
       description: 'Ideal para usuários regulares',
       monthlyPrice: 49.99,
-      discountedMonthlyPrice: 39.99,
-      annualPrice: 39.99,
+      annualPrice: 39.99, // Valor da parcela mensal no plano anual
       color: 'bg-gradient-to-br from-blue-50 to-indigo-100 border-primary ring-4 ring-primary/30 shadow-2xl shadow-primary/20',
       buttonColor: 'bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg',
       isPopular: true,
@@ -49,8 +47,7 @@ const PricingSection = () => {
       name: 'Gold',
       description: 'Para profissionais e empresários',
       monthlyPrice: 69.99,
-      discountedMonthlyPrice: 59.99,
-      annualPrice: 59.99,
+      annualPrice: 59.99, // Valor da parcela mensal no plano anual
       color: 'bg-yellow-50 border-yellow-300',
       buttonColor: 'bg-yellow-500 hover:bg-yellow-600',
       features: [
@@ -67,8 +64,7 @@ const PricingSection = () => {
   ];
 
   const calculateSavings = (monthly: number, annual: number) => {
-    const monthlyTotal = monthly * 12;
-    const savings = ((monthlyTotal - (annual * 12)) / monthlyTotal * 100).toFixed(0);
+    const savings = ((monthly - annual) / monthly * 100).toFixed(0);
     return savings;
   };
 
@@ -102,7 +98,7 @@ const PricingSection = () => {
           {isAnnual && (
             <div className="flex items-center justify-center gap-1 text-sm font-medium text-primary">
               <Flame className="h-4 w-4" />
-              Economize até 20%
+              Economize com o plano anual
             </div>
           )}
         </div>
@@ -110,8 +106,7 @@ const PricingSection = () => {
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
-            const currentPrice = isAnnual ? plan.annualPrice : plan.discountedMonthlyPrice;
-            const originalPrice = isAnnual ? (plan.monthlyPrice * 12) : plan.monthlyPrice;
+            const currentPrice = isAnnual ? plan.annualPrice : plan.monthlyPrice;
             const savings = calculateSavings(plan.monthlyPrice, plan.annualPrice);
 
             return (
@@ -143,25 +138,15 @@ const PricingSection = () => {
                   </p>
                   
                   <div className="mt-4">
-                    {!isAnnual && (
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <span className="text-lg text-muted-foreground line-through">
-                          ${originalPrice.toFixed(2)}
-                        </span>
-                        <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">
-                          20% OFF
-                        </span>
-                      </div>
-                    )}
                     <div className={`text-3xl font-bold ${plan.isPopular ? 'text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent' : 'text-foreground'}`}>
-                      ${currentPrice.toFixed(2)}
+                      R${currentPrice.toFixed(2).replace('.', ',')}
                       <span className="text-sm font-normal text-muted-foreground">
-                        /{isAnnual ? 'ano' : 'mês'}
+                        /mês
                       </span>
                     </div>
                     {isAnnual && (
-                      <div className="text-xs text-primary font-medium">
-                        Economia de {savings}% vs mensal
+                      <div className="text-xs text-primary font-medium mt-1">
+                        Cobrança anual • Economia de {savings}%
                       </div>
                     )}
                   </div>
