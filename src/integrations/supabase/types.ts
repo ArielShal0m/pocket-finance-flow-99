@@ -9,6 +9,69 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      fixed_expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          due_day: number
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          due_day: number
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          due_day?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      friendships: {
+        Row: {
+          created_at: string
+          friend_id: string
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       plan_upgrades: {
         Row: {
           from_plan: Database["public"]["Enums"]["subscription_plan"]
@@ -77,6 +140,48 @@ export type Database = {
         }
         Relationships: []
       }
+      properties: {
+        Row: {
+          address: string
+          created_at: string
+          current_value: number | null
+          id: string
+          name: string
+          notes: string | null
+          property_type: string
+          purchase_date: string | null
+          purchase_price: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          current_value?: number | null
+          id?: string
+          name: string
+          notes?: string | null
+          property_type: string
+          purchase_date?: string | null
+          purchase_price?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          current_value?: number | null
+          id?: string
+          name?: string
+          notes?: string | null
+          property_type?: string
+          purchase_date?: string | null
+          purchase_price?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
@@ -120,6 +225,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_addresses: {
+        Row: {
+          city: string
+          country: string
+          created_at: string
+          id: string
+          is_primary: boolean
+          label: string
+          state: string
+          street: string
+          updated_at: string
+          user_id: string
+          zip_code: string
+        }
+        Insert: {
+          city: string
+          country?: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          label: string
+          state: string
+          street: string
+          updated_at?: string
+          user_id: string
+          zip_code: string
+        }
+        Update: {
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          label?: string
+          state?: string
+          street?: string
+          updated_at?: string
+          user_id?: string
+          zip_code?: string
+        }
+        Relationships: []
+      }
+      user_phones: {
+        Row: {
+          created_at: string
+          id: string
+          is_primary: boolean
+          label: string
+          number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          label: string
+          number: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          label?: string
+          number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      whatsapp_integrations: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          phone_number: string
+          updated_at: string
+          user_id: string
+          webhook_token: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          phone_number: string
+          updated_at?: string
+          user_id: string
+          webhook_token: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          phone_number?: string
+          updated_at?: string
+          user_id?: string
+          webhook_token?: string
+        }
+        Relationships: []
       }
     }
     Views: {

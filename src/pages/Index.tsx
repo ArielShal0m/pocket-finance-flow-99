@@ -15,11 +15,13 @@ import SilverDashboard from '@/components/SilverDashboard';
 import GoldDashboard from '@/components/GoldDashboard';
 import { usePlan } from '@/contexts/PlanContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, UserCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const { currentPlan } = usePlan();
   const { signOut, profile } = useAuth();
+  const navigate = useNavigate();
   const {
     transactions,
     isLoading,
@@ -31,6 +33,10 @@ const Index = () => {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   if (isLoading) {
@@ -93,6 +99,15 @@ const Index = () => {
               <User className="h-4 w-4" />
               <span>{profile?.full_name || profile?.email}</span>
             </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleProfileClick}
+              className="flex items-center gap-2 hover:scale-105 transition-transform duration-200"
+            >
+              <UserCircle className="h-4 w-4" />
+              Perfil
+            </Button>
             <Button 
               variant="outline" 
               size="sm" 
