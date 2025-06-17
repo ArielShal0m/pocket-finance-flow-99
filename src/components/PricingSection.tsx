@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Check, Flame } from 'lucide-react';
+import { Check, Flame, Sparkles } from 'lucide-react';
 
 const PricingSection = () => {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -13,9 +13,9 @@ const PricingSection = () => {
     {
       name: 'Bronze',
       description: 'Perfeito para quem está começando',
-      monthlyPrice: 30,
-      discountedPrice: 24,
-      annualPrice: 240,
+      monthlyPrice: 29.99,
+      discountedMonthlyPrice: 24.99,
+      annualPrice: 24.99,
       color: 'bg-orange-50 border-orange-200',
       buttonColor: 'bg-orange-500 hover:bg-orange-600',
       features: [
@@ -29,11 +29,11 @@ const PricingSection = () => {
     {
       name: 'Silver',
       description: 'Ideal para usuários regulares',
-      monthlyPrice: 50,
-      discountedPrice: 40,
-      annualPrice: 400,
-      color: 'bg-primary/10 border-primary ring-2 ring-primary/20',
-      buttonColor: 'bg-primary hover:bg-primary/90',
+      monthlyPrice: 49.99,
+      discountedMonthlyPrice: 39.99,
+      annualPrice: 39.99,
+      color: 'bg-gradient-to-br from-blue-50 to-indigo-100 border-primary ring-4 ring-primary/30 shadow-2xl shadow-primary/20',
+      buttonColor: 'bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg',
       isPopular: true,
       features: [
         'Controle completo de finanças',
@@ -48,9 +48,9 @@ const PricingSection = () => {
     {
       name: 'Gold',
       description: 'Para profissionais e empresários',
-      monthlyPrice: 80,
-      discountedPrice: 64,
-      annualPrice: 640,
+      monthlyPrice: 69.99,
+      discountedMonthlyPrice: 59.99,
+      annualPrice: 59.99,
       color: 'bg-yellow-50 border-yellow-300',
       buttonColor: 'bg-yellow-500 hover:bg-yellow-600',
       features: [
@@ -68,7 +68,7 @@ const PricingSection = () => {
 
   const calculateSavings = (monthly: number, annual: number) => {
     const monthlyTotal = monthly * 12;
-    const savings = ((monthlyTotal - annual) / monthlyTotal * 100).toFixed(0);
+    const savings = ((monthlyTotal - (annual * 12)) / monthlyTotal * 100).toFixed(0);
     return savings;
   };
 
@@ -110,51 +110,58 @@ const PricingSection = () => {
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => {
-            const currentPrice = isAnnual ? plan.annualPrice : plan.discountedPrice;
+            const currentPrice = isAnnual ? plan.annualPrice : plan.discountedMonthlyPrice;
             const originalPrice = isAnnual ? (plan.monthlyPrice * 12) : plan.monthlyPrice;
             const savings = calculateSavings(plan.monthlyPrice, plan.annualPrice);
 
             return (
               <Card 
                 key={plan.name} 
-                className={`relative transition-all duration-200 hover:shadow-lg ${plan.color} ${
-                  plan.isPopular ? 'scale-105' : ''
+                className={`relative transition-all duration-300 hover:shadow-lg ${plan.color} ${
+                  plan.isPopular ? 'scale-105 transform' : ''
                 }`}
               >
                 {plan.isPopular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground px-4 py-1">
-                      Recomendado
-                    </Badge>
-                  </div>
+                  <>
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white px-4 py-1 shadow-lg animate-pulse">
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        Recomendado
+                      </Badge>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-blue-600/5 rounded-lg pointer-events-none"></div>
+                  </>
                 )}
 
                 <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-xl font-bold text-foreground">
+                  <CardTitle className={`text-xl font-bold text-foreground ${plan.isPopular ? 'text-primary' : ''}`}>
                     {plan.name}
+                    {plan.isPopular && <Sparkles className="h-4 w-4 inline ml-1 text-primary" />}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     {plan.description}
                   </p>
                   
                   <div className="mt-4">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="text-lg text-muted-foreground line-through">
-                        R${originalPrice}
-                      </span>
-                      <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">
-                        20% OFF
-                      </span>
-                    </div>
-                    <div className="text-3xl font-bold text-foreground">
-                      R${currentPrice}
+                    {!isAnnual && (
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <span className="text-lg text-muted-foreground line-through">
+                          ${originalPrice.toFixed(2)}
+                        </span>
+                        <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">
+                          20% OFF
+                        </span>
+                      </div>
+                    )}
+                    <div className={`text-3xl font-bold ${plan.isPopular ? 'text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent' : 'text-foreground'}`}>
+                      ${currentPrice.toFixed(2)}
                       <span className="text-sm font-normal text-muted-foreground">
                         /{isAnnual ? 'ano' : 'mês'}
                       </span>
                     </div>
                     {isAnnual && (
                       <div className="text-xs text-primary font-medium">
-                        Economia de {savings}%
+                        Economia de {savings}% vs mensal
                       </div>
                     )}
                   </div>
@@ -162,9 +169,10 @@ const PricingSection = () => {
 
                 <CardContent className="pt-0">
                   <Button 
-                    className={`w-full mb-6 ${plan.buttonColor} text-white`}
+                    className={`w-full mb-6 ${plan.buttonColor} text-white ${plan.isPopular ? 'shadow-lg transform hover:scale-105 transition-all duration-200' : ''}`}
                     size="lg"
                   >
+                    {plan.isPopular && <Sparkles className="h-4 w-4 mr-2" />}
                     Assinar {plan.name}
                   </Button>
 
