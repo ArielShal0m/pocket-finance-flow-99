@@ -141,18 +141,51 @@ export const useProfile = () => {
 
   const fetchFriendships = async () => {
     if (!user) return;
-    const { data, error } = await supabase
+    
+    // Primeiro buscar as amizades
+    const { data: friendshipsData, error: friendshipsError } = await supabase
       .from('friendships')
-      .select(`
-        *,
-        friend_profile:profiles!friendships_friend_id_fkey(full_name, email)
-      `)
+      .select('*')
       .eq('user_id', user.id)
       .eq('status', 'accepted');
     
-    if (!error && data) {
-      setFriendships(data);
+    if (friendshipsError || !friendshipsData) {
+      console.error('Error fetching friendships:', friendshipsError);
+      return;
     }
+
+    // Depois buscar os perfis dos amigos
+    const friendIds = friendshipsData.map(f => f.friend_id);
+    if (friendIds.length === 0) {
+      setFriendships([]);
+      return;
+    }
+
+    const { data: profilesData, error: profilesError } = await supabase
+      .from('profiles')
+      .select('id, full_name, email')
+      .in('id', friendIds);
+
+    if (profilesError) {
+      console.error('Error fetching friend profiles:', profilesError);
+      setFriendships(friendshipsData.map(f => ({
+        ...f,
+        status: f.status as 'pending' | 'accepted' | 'blocked'
+      })));
+      return;
+    }
+
+    // Combinar os dados
+    const friendshipsWithProfiles = friendshipsData.map(friendship => ({
+      ...friendship,
+      status: friendship.status as 'pending' | 'accepted' | 'blocked',
+      friend_profile: profilesData?.find(p => p.id === friendship.friend_id) ? {
+        full_name: profilesData.find(p => p.id === friendship.friend_id)?.full_name || '',
+        email: profilesData.find(p => p.id === friendship.friend_id)?.email || ''
+      } : undefined
+    }));
+
+    setFriendships(friendshipsWithProfiles);
   };
 
   const fetchWhatsappIntegration = async () => {
