@@ -175,6 +175,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const getPlanPrice = (plan: PlanType): number => {
     switch (plan) {
+      case 'free': return 0;
       case 'bronze': return 24;
       case 'silver': return 40;
       case 'gold': return 64;

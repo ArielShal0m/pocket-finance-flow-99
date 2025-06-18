@@ -2,7 +2,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 
-export type PlanType = 'bronze' | 'silver' | 'gold';
+export type PlanType = 'free' | 'bronze' | 'silver' | 'gold';
 
 interface PlanContextType {
   currentPlan: PlanType;
@@ -29,11 +29,13 @@ interface PlanProviderProps {
 export const PlanProvider = ({ children }: PlanProviderProps) => {
   const { profile, upgradePlan, loading } = useAuth();
   
-  const currentPlan = profile?.current_plan || 'bronze';
+  const currentPlan = profile?.current_plan || 'free';
   const canUpgrade = currentPlan !== 'gold';
 
   const getUpgradeOption = (): PlanType | null => {
     switch (currentPlan) {
+      case 'free':
+        return 'bronze';
       case 'bronze':
         return 'silver';
       case 'silver':
