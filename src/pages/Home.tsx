@@ -24,6 +24,16 @@ const Home = () => {
     }
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   const plans = [
     {
       name: 'Free',
@@ -77,7 +87,8 @@ const Home = () => {
         'Suporte prioritário (24h)'
       ],
       popular: true,
-      color: 'border-blue-500'
+      color: 'border-blue-500 ring-4 ring-blue-500/30 shadow-2xl shadow-blue-500/20 relative',
+      glow: true
     },
     {
       name: 'Gold',
@@ -112,9 +123,24 @@ const Home = () => {
             </div>
             
             <nav className="hidden md:flex space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-gray-900">Recursos</a>
-              <a href="#pricing" className="text-gray-600 hover:text-gray-900">Preços</a>
-              <a href="#testimonials" className="text-gray-600 hover:text-gray-900">Depoimentos</a>
+              <button 
+                onClick={() => scrollToSection('features')} 
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-300 hover:scale-105 transform"
+              >
+                Recursos
+              </button>
+              <button 
+                onClick={() => scrollToSection('pricing')} 
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-300 hover:scale-105 transform"
+              >
+                Preços
+              </button>
+              <button 
+                onClick={() => scrollToSection('testimonials')} 
+                className="text-gray-600 hover:text-gray-900 transition-colors duration-300 hover:scale-105 transform"
+              >
+                Depoimentos
+              </button>
             </nav>
             
             <div className="flex items-center space-x-4">
@@ -258,16 +284,28 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {plans.map((plan) => (
-              <Card key={plan.name} className={`relative ${plan.color} ${plan.popular ? 'ring-2 ring-blue-500' : ''}`}>
+              <Card 
+                key={plan.name} 
+                className={`relative ${plan.color} ${
+                  plan.popular ? 'transform scale-105' : ''
+                } ${
+                  plan.glow ? 'animate-pulse' : ''
+                }`}
+              >
                 {plan.popular && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500">
-                    Recomendado
-                  </Badge>
+                  <>
+                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg animate-bounce">
+                      ⭐ Recomendado ⭐
+                    </Badge>
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-600/10 rounded-lg pointer-events-none"></div>
+                  </>
                 )}
                 <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                  <CardTitle className={`text-2xl ${plan.popular ? 'text-blue-600' : ''}`}>
+                    {plan.name}
+                  </CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
-                  <div className="text-4xl font-bold">
+                  <div className={`text-4xl font-bold ${plan.popular ? 'text-blue-600' : ''}`}>
                     {plan.price}
                     <span className="text-lg font-normal text-gray-600">{plan.period}</span>
                   </div>
@@ -282,7 +320,11 @@ const Home = () => {
                     ))}
                   </ul>
                   <Button 
-                    className="w-full mt-6" 
+                    className={`w-full mt-6 ${
+                      plan.popular 
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg' 
+                        : ''
+                    }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={handleGetStarted}
                   >
@@ -332,27 +374,27 @@ const Home = () => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Produto</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Recursos</a></li>
-                <li><a href="#" className="hover:text-white">Preços</a></li>
-                <li><a href="#" className="hover:text-white">Segurança</a></li>
+                <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Recursos</button></li>
+                <li><button onClick={() => scrollToSection('pricing')} className="hover:text-white transition-colors">Preços</button></li>
+                <li><a href="#" className="hover:text-white transition-colors">Segurança</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="text-lg font-semibold mb-4">Suporte</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Central de Ajuda</a></li>
-                <li><a href="#" className="hover:text-white">Contato</a></li>
-                <li><a href="#" className="hover:text-white">Status</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Central de Ajuda</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contato</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="text-lg font-semibold mb-4">Empresa</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Sobre</a></li>
-                <li><a href="#" className="hover:text-white">Blog</a></li>
-                <li><a href="#" className="hover:text-white">Carreiras</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Sobre</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Carreiras</a></li>
               </ul>
             </div>
           </div>
