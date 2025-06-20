@@ -119,29 +119,29 @@ const Home = () => {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <img 
-                src="/lovable-uploads/aa179586-23b3-403e-9dd1-51c8e34d1ef0.png" 
-                alt="FinanceFlow" 
-                className="h-10 w-auto mr-3"
+                src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=100&h=100&q=80" 
+                alt="Finance Flow - Porquinho" 
+                className="h-12 w-12 rounded-full mr-3 object-cover shadow-md"
               />
-              <span className="text-2xl font-bold text-gray-900">FinanceFlow</span>
+              <span className="text-2xl font-bold text-green-800">Finance Flow</span>
             </div>
             
             <nav className="hidden md:flex space-x-8">
               <button 
                 onClick={() => scrollToSection('features')} 
-                className="text-gray-600 hover:text-green-600 transition-all duration-300 hover:scale-105 transform font-medium"
+                className="text-gray-600 hover:text-green-600 transition-all duration-500 ease-in-out hover:scale-105 transform font-medium"
               >
                 Recursos
               </button>
               <button 
                 onClick={() => scrollToSection('pricing')} 
-                className="text-gray-600 hover:text-green-600 transition-all duration-300 hover:scale-105 transform font-medium"
+                className="text-gray-600 hover:text-green-600 transition-all duration-500 ease-in-out hover:scale-105 transform font-medium"
               >
                 Preços
               </button>
               <button 
                 onClick={() => scrollToSection('testimonials')} 
-                className="text-gray-600 hover:text-green-600 transition-all duration-300 hover:scale-105 transform font-medium"
+                className="text-gray-600 hover:text-green-600 transition-all duration-500 ease-in-out hover:scale-105 transform font-medium"
               >
                 Depoimentos
               </button>
@@ -373,11 +373,11 @@ const Home = () => {
             <div>
               <div className="flex items-center mb-4">
                 <img 
-                  src="/lovable-uploads/aa179586-23b3-403e-9dd1-51c8e34d1ef0.png" 
-                  alt="FinanceFlow" 
-                  className="h-8 w-auto mr-3 filter brightness-0 invert"
+                  src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=100&h=100&q=80" 
+                  alt="Finance Flow - Porquinho" 
+                  className="h-8 w-8 rounded-full mr-3 object-cover filter brightness-0 invert"
                 />
-                <span className="text-2xl font-bold">FinanceFlow</span>
+                <span className="text-2xl font-bold">Finance Flow</span>
               </div>
               <p className="text-gray-400">
                 Controle total das suas finanças pessoais de forma simples e inteligente.
@@ -413,7 +413,7 @@ const Home = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 FinanceFlow. Todos os direitos reservados.</p>
+            <p>&copy; 2024 Finance Flow. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
