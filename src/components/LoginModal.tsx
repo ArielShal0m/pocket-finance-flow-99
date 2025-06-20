@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Lock, Chrome } from 'lucide-react';
+import { Mail, Lock, Chrome, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginModalProps {
   open: boolean;
@@ -14,15 +17,36 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+
   const handleGoogleLogin = () => {
     // Implementar login com Google aqui
     console.log('Login com Google');
   };
 
-  const handleEmailLogin = (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementar login com email aqui
-    console.log('Login com email');
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await signIn(email, password);
+      if (error) {
+        setError(error.message);
+      } else {
+        onOpenChange(false);
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError('Ocorreu um erro inesperado');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,11 +59,19 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
         </DialogHeader>
         
         <div className="space-y-6 py-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Login com Google */}
           <Button 
             onClick={handleGoogleLogin}
             variant="outline" 
             className="w-full h-12 text-base font-medium"
+            disabled={loading}
           >
             <Chrome className="mr-3 h-5 w-5" />
             Continuar com Google
@@ -67,7 +99,10 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
                   type="email"
                   placeholder="seu@email.com"
                   className="pl-10"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -81,13 +116,20 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
                   type="password"
                   placeholder="••••••••"
                   className="pl-10"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-12 text-base font-medium">
-              Entrar
+            <Button 
+              type="submit" 
+              className="w-full h-12 text-base font-medium bg-green-600 hover:bg-green-700"
+              disabled={loading}
+            >
+              {loading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
 
@@ -95,7 +137,8 @@ const LoginModal = ({ open, onOpenChange, onSwitchToSignUp }: LoginModalProps) =
             Não tem uma conta?{' '}
             <button 
               onClick={onSwitchToSignUp}
-              className="text-primary hover:underline font-medium"
+              className="text-green-600 hover:underline font-medium"
+              disabled={loading}
             >
               Criar conta
             </button>

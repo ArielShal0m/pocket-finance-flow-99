@@ -15,20 +15,32 @@ import {
 } from 'lucide-react';
 import { usePlan } from '@/contexts/PlanContext';
 import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
 
 const UserMenu = () => {
   const { profile, signOut } = useAuth();
   const { currentPlan } = usePlan();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const handleSignOut = async () => {
+    setIsSigningOut(true);
     try {
-      await signOut();
-      setIsOpen(false);
-      navigate('/');
+      const { error } = await signOut();
+      if (error) {
+        console.error('Error signing out:', error);
+        toast.error('Erro ao sair da conta');
+      } else {
+        setIsOpen(false);
+        navigate('/');
+        toast.success('Logout realizado com sucesso');
+      }
     } catch (error) {
       console.error('Error signing out:', error);
+      toast.error('Erro ao sair da conta');
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
@@ -65,7 +77,7 @@ const UserMenu = () => {
         <Button variant="ghost" className="h-10 w-10 rounded-full p-0">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile?.avatar_url || ''} />
-            <AvatarFallback className="bg-primary text-primary-foreground">
+            <AvatarFallback className="bg-green-600 text-white">
               {getInitials()}
             </AvatarFallback>
           </Avatar>
@@ -77,7 +89,7 @@ const UserMenu = () => {
           <div className="flex flex-col items-center py-6 border-b">
             <Avatar className="h-20 w-20 mb-4">
               <AvatarImage src={profile?.avatar_url || ''} />
-              <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+              <AvatarFallback className="bg-green-600 text-white text-lg">
                 {getInitials()}
               </AvatarFallback>
             </Avatar>
@@ -146,9 +158,10 @@ const UserMenu = () => {
               variant="outline"
               className="w-full"
               onClick={handleSignOut}
+              disabled={isSigningOut}
             >
               <LogOut className="h-4 w-4 mr-2" />
-              Sair
+              {isSigningOut ? 'Saindo...' : 'Sair'}
             </Button>
           </div>
         </div>

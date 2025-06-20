@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -84,6 +85,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       
@@ -98,17 +100,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    
+    console.log('Sign in result:', data, error);
     return { error };
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -118,16 +122,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         },
       },
     });
+    
+    console.log('Sign up result:', data, error);
     return { error };
   };
 
   const signOut = async () => {
+    console.log('Attempting to sign out...');
     const { error } = await supabase.auth.signOut();
+    
     if (!error) {
+      console.log('Sign out successful, clearing state...');
       setUser(null);
       setSession(null);
       setProfile(null);
+    } else {
+      console.error('Sign out error:', error);
     }
+    
     return { error };
   };
 
