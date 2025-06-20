@@ -365,8 +365,8 @@ const Home = () => {
 
       {/* Modals */}
       <LoginModal 
-        isOpen={showLogin} 
-        onClose={() => setShowLogin(false)}
+        open={showLogin} 
+        onOpenChange={setShowLogin}
         onSwitchToSignUp={() => {
           setShowLogin(false);
           setShowSignUp(true);
@@ -374,8 +374,8 @@ const Home = () => {
       />
       
       <SignUpModal 
-        isOpen={showSignUp} 
-        onClose={() => setShowSignUp(false)}
+        open={showSignUp} 
+        onOpenChange={setShowSignUp}
         onSwitchToLogin={() => {
           setShowSignUp(false);
           setShowLogin(true);
