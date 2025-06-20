@@ -87,7 +87,7 @@ const Home = () => {
         'Suporte prioritário (24h)'
       ],
       popular: true,
-      color: 'border-blue-500 ring-4 ring-blue-500/30 shadow-2xl shadow-blue-500/20 relative',
+      color: 'border-green-500 ring-4 ring-green-500/30 shadow-2xl shadow-green-500/20 relative bg-gradient-to-br from-green-50 to-emerald-50',
       glow: true
     },
     {
@@ -112,32 +112,36 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <TrendingUp className="h-8 w-8 text-blue-600 mr-2" />
-              <span className="text-2xl font-bold text-gray-900">FinanceApp</span>
+              <img 
+                src="/lovable-uploads/aa179586-23b3-403e-9dd1-51c8e34d1ef0.png" 
+                alt="FinanceFlow" 
+                className="h-10 w-auto mr-3"
+              />
+              <span className="text-2xl font-bold text-gray-900">FinanceFlow</span>
             </div>
             
             <nav className="hidden md:flex space-x-8">
               <button 
                 onClick={() => scrollToSection('features')} 
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-300 hover:scale-105 transform"
+                className="text-gray-600 hover:text-green-600 transition-all duration-300 hover:scale-105 transform font-medium"
               >
                 Recursos
               </button>
               <button 
                 onClick={() => scrollToSection('pricing')} 
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-300 hover:scale-105 transform"
+                className="text-gray-600 hover:text-green-600 transition-all duration-300 hover:scale-105 transform font-medium"
               >
                 Preços
               </button>
               <button 
                 onClick={() => scrollToSection('testimonials')} 
-                className="text-gray-600 hover:text-gray-900 transition-colors duration-300 hover:scale-105 transform"
+                className="text-gray-600 hover:text-green-600 transition-all duration-300 hover:scale-105 transform font-medium"
               >
                 Depoimentos
               </button>
@@ -149,6 +153,7 @@ const Home = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => navigate('/dashboard')}
+                    className="border-green-200 text-green-700 hover:bg-green-50"
                   >
                     Dashboard
                   </Button>
@@ -159,10 +164,14 @@ const Home = () => {
                   <Button 
                     variant="ghost" 
                     onClick={() => setShowLogin(true)}
+                    className="text-green-700 hover:bg-green-50"
                   >
                     Entrar
                   </Button>
-                  <Button onClick={() => setShowSignUp(true)}>
+                  <Button 
+                    onClick={() => setShowSignUp(true)}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
                     Começar Grátis
                   </Button>
                 </div>
@@ -177,7 +186,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Controle Total das Suas
-            <span className="text-blue-600 block">Finanças Pessoais</span>
+            <span className="text-green-600 block">Finanças Pessoais</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Gerencie suas receitas, despesas e investimentos de forma inteligente. 
@@ -187,7 +196,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button 
               size="lg" 
-              className="text-lg px-8 py-3"
+              className="text-lg px-8 py-3 bg-green-600 hover:bg-green-700 text-white shadow-lg"
               onClick={handleGetStarted}
             >
               Começar Gratuitamente
@@ -195,7 +204,7 @@ const Home = () => {
             <Button 
               size="lg" 
               variant="outline" 
-              className="text-lg px-8 py-3"
+              className="text-lg px-8 py-3 border-green-200 text-green-700 hover:bg-green-50"
             >
               Ver Demonstração
             </Button>
@@ -203,15 +212,15 @@ const Home = () => {
 
           <div className="flex justify-center items-center space-x-8 text-gray-500">
             <div className="flex items-center">
-              <Shield className="h-5 w-5 mr-2" />
+              <Shield className="h-5 w-5 mr-2 text-green-500" />
               <span>100% Seguro</span>
             </div>
             <div className="flex items-center">
-              <Users className="h-5 w-5 mr-2" />
+              <Users className="h-5 w-5 mr-2 text-green-500" />
               <span>+10.000 usuários</span>
             </div>
             <div className="flex items-center">
-              <Star className="h-5 w-5 mr-2 fill-yellow-400 text-yellow-400" />
+              <Star className="h-5 w-5 mr-2 fill-green-400 text-green-400" />
               <span>4.9/5 avaliação</span>
             </div>
           </div>
@@ -231,9 +240,9 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <BarChart3 className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <BarChart3 className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>Dashboard Inteligente</CardTitle>
               </CardHeader>
               <CardContent>
@@ -243,7 +252,7 @@ const Home = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
                 <TrendingUp className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>Análises Avançadas</CardTitle>
@@ -255,9 +264,9 @@ const Home = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
               <CardHeader>
-                <Shield className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                <Shield className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>Segurança Total</CardTitle>
               </CardHeader>
               <CardContent>
@@ -271,7 +280,7 @@ const Home = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-gray-50">
+      <section id="pricing" className="py-20 bg-gradient-to-br from-green-50 to-emerald-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -287,25 +296,25 @@ const Home = () => {
               <Card 
                 key={plan.name} 
                 className={`relative ${plan.color} ${
-                  plan.popular ? 'transform scale-105' : ''
-                } ${
-                  plan.glow ? 'animate-pulse' : ''
-                }`}
+                  plan.popular ? 'transform scale-105 z-10' : ''
+                } transition-all duration-300 hover:shadow-xl`}
               >
                 {plan.popular && (
                   <>
-                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg animate-bounce">
-                      ⭐ Recomendado ⭐
-                    </Badge>
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-600/10 rounded-lg pointer-events-none"></div>
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg animate-pulse px-4 py-1">
+                        ⭐ Recomendado ⭐
+                      </Badge>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-emerald-600/10 rounded-lg pointer-events-none animate-pulse"></div>
                   </>
                 )}
                 <CardHeader className="text-center">
-                  <CardTitle className={`text-2xl ${plan.popular ? 'text-blue-600' : ''}`}>
+                  <CardTitle className={`text-2xl ${plan.popular ? 'text-green-600' : ''}`}>
                     {plan.name}
                   </CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
-                  <div className={`text-4xl font-bold ${plan.popular ? 'text-blue-600' : ''}`}>
+                  <div className={`text-4xl font-bold ${plan.popular ? 'text-green-600' : ''}`}>
                     {plan.price}
                     <span className="text-lg font-normal text-gray-600">{plan.period}</span>
                   </div>
@@ -322,8 +331,8 @@ const Home = () => {
                   <Button 
                     className={`w-full mt-6 ${
                       plan.popular 
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg' 
-                        : ''
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg text-white' 
+                        : 'border-green-200 text-green-700 hover:bg-green-50'
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={handleGetStarted}
@@ -338,18 +347,18 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
+      <section className="py-20 bg-green-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-white mb-6">
             Pronto para Transformar suas Finanças?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-xl text-green-100 mb-8">
             Junte-se a milhares de usuários que já estão no controle das suas finanças
           </p>
           <Button 
             size="lg" 
             variant="secondary" 
-            className="text-lg px-8 py-3"
+            className="text-lg px-8 py-3 bg-white text-green-600 hover:bg-green-50"
             onClick={handleGetStarted}
           >
             Começar Agora - É Grátis
@@ -363,8 +372,12 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <TrendingUp className="h-8 w-8 text-blue-400 mr-2" />
-                <span className="text-2xl font-bold">FinanceApp</span>
+                <img 
+                  src="/lovable-uploads/aa179586-23b3-403e-9dd1-51c8e34d1ef0.png" 
+                  alt="FinanceFlow" 
+                  className="h-8 w-auto mr-3 filter brightness-0 invert"
+                />
+                <span className="text-2xl font-bold">FinanceFlow</span>
               </div>
               <p className="text-gray-400">
                 Controle total das suas finanças pessoais de forma simples e inteligente.
@@ -400,7 +413,7 @@ const Home = () => {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 FinanceApp. Todos os direitos reservados.</p>
+            <p>&copy; 2024 FinanceFlow. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
