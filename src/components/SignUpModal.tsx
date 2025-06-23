@@ -1,11 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Mail, Lock, Chrome, User } from 'lucide-react';
+import { Mail, Lock, Chrome, User, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface SignUpModalProps {
   open: boolean;
@@ -14,15 +18,58 @@ interface SignUpModalProps {
 }
 
 const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) => {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+
   const handleGoogleSignUp = () => {
-    // Implementar cadastro com Google aqui
-    console.log('Cadastro com Google');
+    console.log('Cadastro com Google - implementar futuramente');
+    toast.info('Cadastro com Google será implementado em breve');
   };
 
-  const handleEmailSignUp = (e: React.FormEvent) => {
+  const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementar cadastro com email aqui
-    console.log('Cadastro com email');
+    setLoading(true);
+    setError(null);
+
+    // Validações básicas
+    if (!fullName.trim()) {
+      setError('Nome completo é obrigatório');
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem');
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await signUp(email, password, fullName);
+      if (error) {
+        setError(error.message);
+      } else {
+        toast.success('Conta criada com sucesso! Verifique seu email para confirmar.');
+        onOpenChange(false);
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setError('Ocorreu um erro inesperado');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,11 +82,19 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
         </DialogHeader>
         
         <div className="space-y-6 py-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Cadastro com Google */}
           <Button 
             onClick={handleGoogleSignUp}
             variant="outline" 
             className="w-full h-12 text-base font-medium"
+            disabled={loading}
           >
             <Chrome className="mr-3 h-5 w-5" />
             Continuar com Google
@@ -59,15 +114,18 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
           {/* Cadastro com Email */}
           <form onSubmit={handleEmailSignUp} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
+              <Label htmlFor="fullName">Nome Completo</Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="name"
+                  id="fullName"
                   type="text"
                   placeholder="Seu nome completo"
                   className="pl-10"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -81,7 +139,10 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
                   type="email"
                   placeholder="seu@email.com"
                   className="pl-10"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -95,7 +156,10 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
                   type="password"
                   placeholder="••••••••"
                   className="pl-10"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -109,13 +173,20 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
                   type="password"
                   placeholder="••••••••"
                   className="pl-10"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full h-12 text-base font-medium">
-              Criar Conta
+            <Button 
+              type="submit" 
+              className="w-full h-12 text-base font-medium bg-green-600 hover:bg-green-700"
+              disabled={loading}
+            >
+              {loading ? 'Criando conta...' : 'Criar Conta'}
             </Button>
           </form>
 
@@ -123,7 +194,8 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
             Já tem uma conta?{' '}
             <button 
               onClick={onSwitchToLogin}
-              className="text-primary hover:underline font-medium"
+              className="text-green-600 hover:underline font-medium"
+              disabled={loading}
             >
               Fazer login
             </button>

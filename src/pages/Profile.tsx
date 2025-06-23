@@ -5,6 +5,8 @@ import ProfileHeader from '@/components/ProfileHeader';
 import FixedExpensesSection from '@/components/FixedExpensesSection';
 import PropertiesSection from '@/components/PropertiesSection';
 import WhatsAppIntegration from '@/components/WhatsAppIntegration';
+import AddAddressModal from '@/components/AddAddressModal';
+import AddPhoneModal from '@/components/AddPhoneModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,6 +24,9 @@ const Profile = () => {
     loading,
     refetch,
   } = useProfile();
+
+  const [isAddAddressModalOpen, setIsAddAddressModalOpen] = useState(false);
+  const [isAddPhoneModalOpen, setIsAddPhoneModalOpen] = useState(false);
 
   if (loading) {
     return (
@@ -94,7 +99,11 @@ const Profile = () => {
                       <MapPin className="h-5 w-5 text-red-600" />
                       Endereços
                     </CardTitle>
-                    <Button size="sm" className="hover:scale-105 transition-transform duration-200">
+                    <Button 
+                      size="sm" 
+                      className="hover:scale-105 transition-transform duration-200"
+                      onClick={() => setIsAddAddressModalOpen(true)}
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Adicionar
                     </Button>
@@ -105,6 +114,13 @@ const Profile = () => {
                     <div className="text-center py-8 text-gray-500">
                       <MapPin className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                       <p>Nenhum endereço cadastrado</p>
+                      <Button 
+                        variant="outline" 
+                        className="mt-4"
+                        onClick={() => setIsAddAddressModalOpen(true)}
+                      >
+                        Adicionar Endereço
+                      </Button>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -141,7 +157,11 @@ const Profile = () => {
                       <Phone className="h-5 w-5 text-green-600" />
                       Telefones
                     </CardTitle>
-                    <Button size="sm" className="hover:scale-105 transition-transform duration-200">
+                    <Button 
+                      size="sm" 
+                      className="hover:scale-105 transition-transform duration-200"
+                      onClick={() => setIsAddPhoneModalOpen(true)}
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Adicionar
                     </Button>
@@ -152,6 +172,13 @@ const Profile = () => {
                     <div className="text-center py-8 text-gray-500">
                       <Phone className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                       <p>Nenhum telefone cadastrado</p>
+                      <Button 
+                        variant="outline" 
+                        className="mt-4"
+                        onClick={() => setIsAddPhoneModalOpen(true)}
+                      >
+                        Adicionar Telefone
+                      </Button>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -236,6 +263,18 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <AddAddressModal 
+        open={isAddAddressModalOpen} 
+        onOpenChange={setIsAddAddressModalOpen}
+        onSuccess={refetch}
+      />
+
+      <AddPhoneModal 
+        open={isAddPhoneModalOpen} 
+        onOpenChange={setIsAddPhoneModalOpen}
+        onSuccess={refetch}
+      />
     </div>
   );
 };
