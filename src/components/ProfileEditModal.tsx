@@ -47,21 +47,24 @@ const ProfileEditModal = ({ open, onOpenChange }: ProfileEditModalProps) => {
       // Upload da foto se foi selecionada
       if (avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
-        const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
         
         const { error: uploadError } = await supabase.storage
           .from('avatars')
-          .upload(fileName, avatarFile);
+          .upload(fileName, avatarFile, {
+            upsert: true
+          });
 
         if (uploadError) {
           console.error('Erro no upload:', uploadError);
-          toast.error('Erro ao fazer upload da foto');
-        } else {
-          const { data } = supabase.storage
-            .from('avatars')
-            .getPublicUrl(fileName);
-          avatarUrl = data.publicUrl;
+          setError('Erro ao fazer upload da foto');
+          return;
         }
+
+        const { data } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(fileName);
+        avatarUrl = data.publicUrl;
       }
 
       // Atualizar perfil
