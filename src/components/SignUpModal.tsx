@@ -74,16 +74,16 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-white shadow-xl rounded-xl border-0">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold">
+          <DialogTitle className="text-center text-2xl font-bold text-gray-800">
             Criar Conta no FinanceFlow
           </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
           {error && (
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="bg-red-50 border-0 shadow-sm rounded-lg">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
@@ -93,7 +93,7 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
           <Button 
             onClick={handleGoogleSignUp}
             variant="outline" 
-            className="w-full h-12 text-base font-medium"
+            className="w-full h-12 text-base font-medium bg-white hover:bg-gray-50 border-0 shadow-md rounded-lg"
             disabled={loading}
           >
             <Chrome className="mr-3 h-5 w-5" />
@@ -102,10 +102,10 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
+              <Separator className="w-full bg-gray-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
+              <span className="bg-white px-2 text-gray-500">
                 Ou
               </span>
             </div>
@@ -114,14 +114,14 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
           {/* Cadastro com Email */}
           <form onSubmit={handleEmailSignUp} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Nome Completo</Label>
+              <Label htmlFor="fullName" className="text-gray-700 font-medium">Nome Completo</Label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="fullName"
                   type="text"
                   placeholder="Seu nome completo"
-                  className="pl-10"
+                  className="pl-10 bg-white border-0 shadow-md rounded-lg h-12 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-green-500"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
@@ -131,14 +131,14 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
-                  className="pl-10"
+                  className="pl-10 bg-white border-0 shadow-md rounded-lg h-12 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-green-500"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -148,14 +148,14 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password" className="text-gray-700 font-medium">Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  className="pl-10"
+                  className="pl-10 bg-white border-0 shadow-md rounded-lg h-12 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-green-500"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -165,14 +165,14 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirmar Senha</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="confirmPassword"
                   type="password"
                   placeholder="••••••••"
-                  className="pl-10"
+                  className="pl-10 bg-white border-0 shadow-md rounded-lg h-12 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-green-500"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
@@ -183,14 +183,14 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
 
             <Button 
               type="submit" 
-              className="w-full h-12 text-base font-medium bg-green-600 hover:bg-green-700"
+              className="w-full h-12 text-base font-medium bg-green-600 hover:bg-green-700 border-0 shadow-lg rounded-lg"
               disabled={loading}
             >
               {loading ? 'Criando conta...' : 'Criar Conta'}
             </Button>
           </form>
 
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-gray-600">
             Já tem uma conta?{' '}
             <button 
               onClick={onSwitchToLogin}

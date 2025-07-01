@@ -62,9 +62,9 @@ const AddPhoneModal = ({ open, onOpenChange, onSuccess }: AddPhoneModalProps) =>
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-white shadow-xl rounded-xl border-0">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2">
+          <DialogTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2 text-gray-800">
             <Phone className="h-6 w-6" />
             Adicionar Telefone
           </DialogTitle>
@@ -72,7 +72,7 @@ const AddPhoneModal = ({ open, onOpenChange, onSuccess }: AddPhoneModalProps) =>
         
         <div className="space-y-6 py-4">
           {error && (
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="bg-red-50 border-0 shadow-sm rounded-lg">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
@@ -80,11 +80,12 @@ const AddPhoneModal = ({ open, onOpenChange, onSuccess }: AddPhoneModalProps) =>
 
           <form onSubmit={handleSave} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="label">Rótulo</Label>
+              <Label htmlFor="label" className="text-gray-700 font-medium">Rótulo</Label>
               <Input
                 id="label"
                 type="text"
                 placeholder="Ex: Celular, Casa, Trabalho, etc."
+                className="bg-white border-0 shadow-md rounded-lg h-12 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-green-500"
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 required
@@ -93,11 +94,12 @@ const AddPhoneModal = ({ open, onOpenChange, onSuccess }: AddPhoneModalProps) =>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="number">Número</Label>
+              <Label htmlFor="number" className="text-gray-700 font-medium">Número</Label>
               <Input
                 id="number"
                 type="tel"
                 placeholder="(11) 99999-9999"
+                className="bg-white border-0 shadow-md rounded-lg h-12 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-green-500"
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
                 required
@@ -111,15 +113,16 @@ const AddPhoneModal = ({ open, onOpenChange, onSuccess }: AddPhoneModalProps) =>
                 checked={isPrimary}
                 onCheckedChange={(checked) => setIsPrimary(checked as boolean)}
                 disabled={loading}
+                className="border-gray-300 rounded-md"
               />
-              <Label htmlFor="isPrimary">Definir como telefone principal</Label>
+              <Label htmlFor="isPrimary" className="text-gray-700">Definir como telefone principal</Label>
             </div>
 
             <div className="flex gap-3">
               <Button 
                 type="button" 
                 variant="outline" 
-                className="flex-1"
+                className="flex-1 bg-white hover:bg-gray-50 border-0 shadow-md rounded-lg"
                 onClick={() => onOpenChange(false)}
                 disabled={loading}
               >
@@ -127,7 +130,7 @@ const AddPhoneModal = ({ open, onOpenChange, onSuccess }: AddPhoneModalProps) =>
               </Button>
               <Button 
                 type="submit" 
-                className="flex-1 bg-green-600 hover:bg-green-700"
+                className="flex-1 bg-green-600 hover:bg-green-700 border-0 shadow-lg rounded-lg"
                 disabled={loading}
               >
                 {loading ? 'Salvando...' : 'Salvar'}
