@@ -92,7 +92,7 @@ const FreeDashboard = () => {
           </CardHeader>
           <CardContent>
             <ul className="text-sm text-muted-foreground space-y-1">
-              <li>• Até 3 contas</li>
+              <li>• Transações ilimitadas</li>
               <li>• 5 categorias de despesas</li>
               <li>• 1MB de armazenamento</li>
               <li>• Relatório mensal básico</li>

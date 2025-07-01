@@ -33,7 +33,7 @@ const GoldDashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Gestão completa com múltiplas contas e integrações.
+              Gestão completa com transações ilimitadas.
             </p>
           </CardContent>
         </Card>

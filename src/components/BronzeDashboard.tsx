@@ -77,7 +77,7 @@ const BronzeDashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Até 100 transações por mês. Upgrade para ter acesso ilimitado.
+              Transações ilimitadas por mês. Upgrade para ter acesso a recursos avançados.
             </p>
             <Button 
               variant="outline" 

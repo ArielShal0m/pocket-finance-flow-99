@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Star, TrendingUp, Shield, BarChart3, Users, PiggyBank } from 'lucide-react';
 import LoginModal from '@/components/LoginModal';
 import SignUpModal from '@/components/SignUpModal';
+import VideoModal from '@/components/VideoModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import UserMenu from '@/components/UserMenu';
@@ -41,7 +43,7 @@ const Home = () => {
       description: 'Perfeito para começar',
       features: [
         'Dashboard básico',
-        'Até 3 contas',
+        'Transações ilimitadas',
         '5 categorias de despesas',
         'Gráfico básico (2 categorias)',
         'Relatório mensal simples',
@@ -58,7 +60,7 @@ const Home = () => {
       description: 'Ideal para uso pessoal',
       features: [
         'Dashboard completo',
-        'Até 5 contas',
+        'Transações ilimitadas',
         '10 categorias de despesas',
         'Gráficos interativos',
         'Exportação em PDF',
@@ -76,7 +78,7 @@ const Home = () => {
       description: 'Recomendado',
       features: [
         'Dashboard avançado',
-        'Até 10 contas',
+        'Transações ilimitadas',
         '20 categorias de despesas',
         'Análises inteligentes',
         'Exportação CSV, PDF, Excel',
@@ -96,7 +98,7 @@ const Home = () => {
       description: 'Para poder máximo',
       features: [
         'Dashboard personalizado',
-        'Contas ilimitadas',
+        'Transações ilimitadas',
         'Categorias ilimitadas',
         'Integração bancária',
         'IA para previsões',
@@ -181,33 +183,35 @@ const Home = () => {
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in">
             Controle Total das Suas
             <span className="text-green-600 block">Finanças Pessoais</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
             Gerencie suas receitas, despesas e investimentos de forma inteligente. 
             Tenha insights poderosos e tome decisões financeiras mais assertivas.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <Button 
               size="lg" 
-              className="text-lg px-8 py-3 bg-green-600 hover:bg-green-700 text-white shadow-lg"
+              className="text-lg px-8 py-3 bg-green-600 hover:bg-green-700 text-white shadow-lg hover-scale"
               onClick={handleGetStarted}
             >
               Começar Gratuitamente
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="text-lg px-8 py-3 border-green-200 text-green-700 hover:bg-green-50"
-            >
-              Ver Demonstração
-            </Button>
+            <VideoModal>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-3 border-green-200 text-green-700 hover:bg-green-50 hover-scale"
+              >
+                Ver Demonstração
+              </Button>
+            </VideoModal>
           </div>
 
-          <div className="flex justify-center items-center space-x-8 text-gray-500">
+          <div className="flex justify-center items-center space-x-8 text-gray-500 animate-fade-in" style={{ animationDelay: '0.6s' }}>
             <div className="flex items-center">
               <Shield className="h-5 w-5 mr-2 text-green-500" />
               <span>100% Seguro</span>
@@ -228,16 +232,16 @@ const Home = () => {
       <section id="features" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
               Recursos Poderosos
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               Tudo que você precisa para ter controle total das suas finanças
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <CardHeader>
                 <BarChart3 className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>Dashboard Inteligente</CardTitle>
@@ -249,7 +253,7 @@ const Home = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <CardHeader>
                 <TrendingUp className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>Análises Avançadas</CardTitle>
@@ -261,7 +265,7 @@ const Home = () => {
               </CardContent>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow duration-300">
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: '0.5s' }}>
               <CardHeader>
                 <Shield className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>Segurança Total</CardTitle>
@@ -280,21 +284,22 @@ const Home = () => {
       <section id="pricing" className="py-20 bg-gradient-to-br from-green-50 to-emerald-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
               Escolha o Plano Ideal
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               Comece grátis e evolua conforme suas necessidades
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <Card 
                 key={plan.name} 
                 className={`relative ${plan.color} ${
                   plan.popular ? 'transform scale-105 z-10' : ''
-                } transition-all duration-300 hover:shadow-xl`}
+                } transition-all duration-300 hover:shadow-xl hover-scale animate-fade-in`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {plan.popular && (
                   <>
@@ -326,7 +331,7 @@ const Home = () => {
                     ))}
                   </ul>
                   <Button 
-                    className={`w-full mt-6 ${
+                    className={`w-full mt-6 hover-scale ${
                       plan.popular 
                         ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg text-white' 
                         : 'border-green-200 text-green-700 hover:bg-green-50'
@@ -343,19 +348,81 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section id="testimonials" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
+              O Que Nossos Usuários Dizem
+            </h2>
+            <p className="text-xl text-gray-600 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              Histórias reais de pessoas que transformaram suas finanças
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <CardContent className="pt-6">
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "Consegui organizar minhas finanças em apenas 1 mês. Recomendo para todos!"
+                </p>
+                <p className="font-semibold">Maria Silva</p>
+                <p className="text-sm text-gray-500">Plano Silver</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <CardContent className="pt-6">
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "Interface incrível e fácil de usar. Nunca foi tão simples controlar o orçamento."
+                </p>
+                <p className="font-semibold">João Santos</p>
+                <p className="text-sm text-gray-500">Plano Gold</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in" style={{ animationDelay: '0.5s' }}>
+              <CardContent className="pt-6">
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "Os insights me ajudaram a economizar mais de R$ 500 por mês!"
+                </p>
+                <p className="font-semibold">Ana Costa</p>
+                <p className="text-sm text-gray-500">Plano Bronze</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-green-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-4xl font-bold text-white mb-6 animate-fade-in">
             Pronto para Transformar suas Finanças?
           </h2>
-          <p className="text-xl text-green-100 mb-8">
+          <p className="text-xl text-green-100 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             Junte-se a milhares de usuários que já estão no controle das suas finanças
           </p>
           <Button 
             size="lg" 
             variant="secondary" 
-            className="text-lg px-8 py-3 bg-white text-green-600 hover:bg-green-50"
+            className="text-lg px-8 py-3 bg-white text-green-600 hover:bg-green-50 hover-scale animate-fade-in"
+            style={{ animationDelay: '0.4s' }}
             onClick={handleGetStarted}
           >
             Começar Agora - É Grátis

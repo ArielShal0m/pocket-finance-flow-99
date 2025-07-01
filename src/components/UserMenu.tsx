@@ -74,7 +74,7 @@ const UserMenu = () => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="h-10 w-10 rounded-full p-0">
+        <Button variant="ghost" className="h-10 w-10 rounded-full p-0 hover-scale">
           <Avatar className="h-10 w-10">
             <AvatarImage src={profile?.avatar_url || ''} />
             <AvatarFallback className="bg-green-600 text-white">
@@ -109,7 +109,7 @@ const UserMenu = () => {
             <div className="space-y-2">
               <Button
                 variant="ghost"
-                className="w-full justify-start"
+                className="w-full justify-start hover-scale"
                 onClick={() => handleNavigation('/dashboard')}
               >
                 <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -118,7 +118,7 @@ const UserMenu = () => {
               
               <Button
                 variant="ghost"
-                className="w-full justify-start"
+                className="w-full justify-start hover-scale"
                 onClick={() => handleNavigation('/profile')}
               >
                 <User className="h-4 w-4 mr-2" />
@@ -127,7 +127,7 @@ const UserMenu = () => {
 
               <Button
                 variant="ghost"
-                className="w-full justify-start"
+                className="w-full justify-start hover-scale"
                 onClick={() => handleNavigation('/profile')}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
@@ -136,7 +136,7 @@ const UserMenu = () => {
 
               <Button
                 variant="ghost"
-                className="w-full justify-start"
+                className="w-full justify-start hover-scale"
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Configurações
@@ -144,7 +144,7 @@ const UserMenu = () => {
 
               <Button
                 variant="ghost"
-                className="w-full justify-start"
+                className="w-full justify-start hover-scale"
               >
                 <HelpCircle className="h-4 w-4 mr-2" />
                 Ajuda
@@ -156,7 +156,7 @@ const UserMenu = () => {
           <div className="border-t pt-4">
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full hover-scale"
               onClick={handleSignOut}
               disabled={isSigningOut}
             >
