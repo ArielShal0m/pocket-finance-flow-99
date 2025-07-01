@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,6 +44,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -71,10 +71,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       async (event, session) => {
         console.log('Auth state change:', event, session?.user?.id);
         
+        // Ignore auth events if we're in the process of signing out
+        if (isSigningOut && event === 'SIGNED_IN') {
+          console.log('Ignoring SIGNED_IN event during sign out process');
+          return;
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         
-        if (session?.user) {
+        if (session?.user && !isSigningOut) {
           // Use setTimeout to prevent auth callback blocking
           setTimeout(() => {
             fetchProfile(session.user.id);
@@ -90,20 +96,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session check:', session?.user?.id);
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
-        setLoading(false);
+      if (!isSigningOut) {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          fetchProfile(session.user.id);
+        } else {
+          setLoading(false);
+        }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [isSigningOut]);
 
   const signIn = async (email: string, password: string) => {
+    setIsSigningOut(false);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -114,6 +123,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    setIsSigningOut(false);
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -134,6 +144,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     console.log('Attempting to sign out...');
     
+    // Set flag to prevent auto-reconnection
+    setIsSigningOut(true);
+    
     // Clear local state immediately
     setUser(null);
     setSession(null);
@@ -143,8 +156,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     
     if (error) {
       console.error('Sign out error:', error);
+      setIsSigningOut(false); // Reset flag on error
     } else {
       console.log('Sign out successful');
+      // Keep the flag true to prevent auto-reconnection
+      setTimeout(() => {
+        setIsSigningOut(false);
+      }, 5000); // Reset after 5 seconds
     }
     
     return { error };

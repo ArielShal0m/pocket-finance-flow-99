@@ -11,6 +11,10 @@ import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import FreeDashboard from "./pages/FreeDashboard";
+import BronzeDashboard from "./pages/BronzeDashboard";
+import SilverDashboard from "./pages/SilverDashboard";
+import GoldDashboard from "./pages/GoldDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +33,26 @@ const App = () => (
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Index />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/free" element={
+                <ProtectedRoute>
+                  <FreeDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/bronze" element={
+                <ProtectedRoute>
+                  <BronzeDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/silver" element={
+                <ProtectedRoute>
+                  <SilverDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/gold" element={
+                <ProtectedRoute>
+                  <GoldDashboard />
                 </ProtectedRoute>
               } />
               <Route path="/profile" element={
