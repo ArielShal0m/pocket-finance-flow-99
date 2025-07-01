@@ -70,11 +70,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state change:', event, session?.user?.id);
+        
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          // Use setTimeout to prevent auth callback blocking
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
         } else {
           setProfile(null);
         }
@@ -129,15 +133,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signOut = async () => {
     console.log('Attempting to sign out...');
+    
+    // Clear local state immediately
+    setUser(null);
+    setSession(null);
+    setProfile(null);
+    
     const { error } = await supabase.auth.signOut();
     
-    if (!error) {
-      console.log('Sign out successful, clearing state...');
-      setUser(null);
-      setSession(null);
-      setProfile(null);
-    } else {
+    if (error) {
       console.error('Sign out error:', error);
+    } else {
+      console.log('Sign out successful');
     }
     
     return { error };
