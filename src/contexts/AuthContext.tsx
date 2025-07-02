@@ -62,41 +62,66 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
+    let mounted = true;
+
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          if (mounted) {
+            setLoading(false);
+          }
+          return;
+        }
 
-      setSession(session);
-
-      if (session) {
-        setUser(session.user);
-        await fetchProfile(session.user.id);
+        if (mounted) {
+          setSession(session);
+          if (session?.user) {
+            setUser(session.user);
+            await fetchProfile(session.user.id);
+          }
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error in getSession:', error);
+        if (mounted) {
+          setLoading(false);
+        }
       }
-
-      setLoading(false);
     };
 
     getSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user || null);
-      setSession(session);
+      console.log('Auth state change:', event, session);
       
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-      } else {
-        setProfile(null);
+      if (mounted) {
+        setUser(session?.user || null);
+        setSession(session);
+        
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        } else {
+          setProfile(null);
+        }
+        
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const logout = async () => {
-    setLoading(true);
     try {
-      // Atualizar status para offline antes de fazer logout
+      setLoading(true);
+      
+      // Update status to offline before logout
       if (user) {
         await supabase
           .from('user_status')
@@ -108,7 +133,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        console.error('Logout error:', error);
+        return;
+      }
       
       // Clear state immediately after signout
       setUser(null);
@@ -122,21 +150,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (email: string) => {
-    setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({ email });
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOtp({ 
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
       if (error) throw error;
       alert('Check your email for the login link!');
     } catch (error) {
       console.error('Login error:', error);
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const signIn = async (email: string, password: string) => {
-    setLoading(true);
     try {
+      setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -151,8 +185,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    setLoading(true);
     try {
+      setLoading(true);
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -160,6 +194,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: `${window.location.origin}/dashboard`
         },
       });
 

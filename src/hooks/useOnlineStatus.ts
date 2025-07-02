@@ -25,31 +25,39 @@ export const useOnlineStatus = () => {
       }
     };
 
-    // Definir como online quando conecta
+    // Set as online when connecting
     updateStatus(true);
 
-    // Definir como offline quando sai
+    // Set as offline when leaving
     const handleBeforeUnload = () => {
-      updateStatus(false);
+      // Use sendBeacon for reliable offline status on page unload
+      navigator.sendBeacon(`/api/offline/${user.id}`);
     };
 
     const handleVisibilityChange = () => {
       updateStatus(!document.hidden);
     };
 
+    const handleOnline = () => updateStatus(true);
+    const handleOffline = () => updateStatus(false);
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
-    // Atualizar status periodicamente
+    // Update status periodically
     const interval = setInterval(() => {
       if (!document.hidden) {
         updateStatus(true);
       }
-    }, 30000); // A cada 30 segundos
+    }, 30000); // Every 30 seconds
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
       clearInterval(interval);
       updateStatus(false);
     };
