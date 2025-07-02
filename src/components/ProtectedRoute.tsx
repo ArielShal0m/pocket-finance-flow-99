@@ -13,6 +13,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   console.log('ProtectedRoute - user:', user, 'loading:', loading);
 
+  // Mostrar skeleton enquanto carrega
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
@@ -31,11 +32,13 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
+  // Se não há usuário, redirecionar para auth
   if (!user) {
     console.log('No user, redirecting to auth');
     return <Navigate to="/auth" replace />;
   }
 
+  // Se há usuário, mostrar o conteúdo
   return <>{children}</>;
 };
 

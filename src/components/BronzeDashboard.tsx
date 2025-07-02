@@ -3,27 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, ArrowUp } from 'lucide-react';
-import { usePlan } from '@/contexts/PlanContext';
-import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const BronzeDashboard = () => {
-  const { setCurrentPlan, loading } = usePlan();
-  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleUpgrade = async () => {
-    try {
-      await setCurrentPlan('silver');
-      toast({
-        title: "Upgrade realizado!",
-        description: "Você agora tem acesso ao plano Silver.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro no upgrade",
-        description: "Não foi possível fazer o upgrade. Tente novamente.",
-        variant: "destructive",
-      });
-    }
+  const handleViewPlans = () => {
+    navigate('/plans');
   };
 
   return (
@@ -37,18 +23,17 @@ const BronzeDashboard = () => {
               <span>Plano Básico</span>
             </div>
             <Button 
-              onClick={handleUpgrade}
-              disabled={loading}
+              onClick={handleViewPlans}
               className="bg-primary hover:bg-primary/90"
             >
               <ArrowUp className="h-4 w-4 mr-2" />
-              {loading ? 'Carregando...' : 'Fazer Upgrade'}
+              Ver Planos
             </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Você está no plano Bronze. Faça upgrade para desbloquear recursos avançados.
+            Você está no plano Bronze. Conheça outros planos para desbloquear recursos avançados.
           </p>
         </CardContent>
       </Card>
@@ -83,10 +68,9 @@ const BronzeDashboard = () => {
               variant="outline" 
               size="sm" 
               className="mt-2"
-              onClick={handleUpgrade}
-              disabled={loading}
+              onClick={handleViewPlans}
             >
-              Desbloquear
+              Ver Planos
             </Button>
           </CardContent>
         </Card>

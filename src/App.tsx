@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import Plans from "./pages/Plans";
 import FreeDashboard from "./pages/FreeDashboard";
 import BronzeDashboard from "./pages/BronzeDashboard";
 import SilverDashboard from "./pages/SilverDashboard";
@@ -44,6 +45,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/plans" element={<Plans />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Index />

@@ -3,11 +3,10 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, MessageCircle, DollarSign, UserPlus } from 'lucide-react';
+import { Users, DollarSign, UserPlus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import AddFriendModal from './AddFriendModal';
-import ChatModal from './ChatModal';
 import PixModal from './PixModal';
 
 interface Friend {
@@ -29,7 +28,6 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
   const { user } = useAuth();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
-  const [chatModalOpen, setChatModalOpen] = useState(false);
   const [pixModalOpen, setPixModalOpen] = useState(false);
 
   useEffect(() => {
@@ -99,11 +97,6 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
     }
   };
 
-  const openChat = (friend: Friend) => {
-    setSelectedFriend(friend);
-    setChatModalOpen(true);
-  };
-
   const openPix = (friend: Friend) => {
     setSelectedFriend(friend);
     setPixModalOpen(true);
@@ -163,14 +156,6 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      onClick={() => openChat(friend)}
-                      className="hover:scale-110 transition-transform duration-200"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
                       onClick={() => openPix(friend)}
                       className="hover:scale-110 transition-transform duration-200"
                     >
@@ -185,18 +170,11 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
       </Card>
 
       {selectedFriend && (
-        <>
-          <ChatModal 
-            open={chatModalOpen}
-            onOpenChange={setChatModalOpen}
-            friend={selectedFriend}
-          />
-          <PixModal 
-            open={pixModalOpen}
-            onOpenChange={setPixModalOpen}
-            friend={selectedFriend}
-          />
-        </>
+        <PixModal 
+          open={pixModalOpen}
+          onOpenChange={setPixModalOpen}
+          friend={selectedFriend}
+        />
       )}
     </>
   );
