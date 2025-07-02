@@ -1,13 +1,28 @@
+
 import { createContext, useContext, useState, useEffect } from 'react';
-import { Session } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+interface Profile {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  current_plan: 'free' | 'bronze' | 'silver' | 'gold';
+  plan_started_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 interface AuthContextType {
-  user: any;
+  user: User | null;
   session: Session | null;
+  profile: Profile | null;
   loading: boolean;
   login: (email: string) => Promise<void>;
-  signUp: (email: string, password: string, fullName: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
+  upgradePlan: (plan: 'free' | 'bronze' | 'silver' | 'gold') => Promise<{ error: any }>;
   logout: () => Promise<void>;
 }
 
@@ -22,9 +37,29 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return;
+      }
+
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
 
   useEffect(() => {
     const getSession = async () => {
@@ -34,6 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (session) {
         setUser(session.user);
+        await fetchProfile(session.user.id);
       }
 
       setLoading(false);
@@ -41,11 +77,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     getSession();
 
-    supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user || null);
       setSession(session);
+      
+      if (session?.user) {
+        await fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
+      
       setLoading(false);
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const logout = async () => {
@@ -68,6 +113,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Clear state immediately after signout
       setUser(null);
       setSession(null);
+      setProfile(null);
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -88,6 +134,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      return { error };
+    } catch (error) {
+      console.error('SignIn error:', error);
+      return { error };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signUp = async (email: string, password: string, fullName: string) => {
     setLoading(true);
     try {
@@ -100,7 +162,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           },
         },
       });
-      if (error) throw error;
+
+      if (error) return { error };
 
       // Update the user's profile immediately after signup
       if (data.user) {
@@ -110,20 +173,57 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .eq('id', data.user.id);
       }
 
-      alert('Check your email to verify your account!');
+      return { error: null };
     } catch (error) {
       console.error('Signup error:', error);
+      return { error };
     } finally {
       setLoading(false);
+    }
+  };
+
+  const upgradePlan = async (plan: 'free' | 'bronze' | 'silver' | 'gold') => {
+    if (!user) return { error: 'User not authenticated' };
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          current_plan: plan,
+          plan_started_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) return { error };
+
+      // Record the upgrade
+      await supabase
+        .from('plan_upgrades')
+        .insert({
+          user_id: user.id,
+          from_plan: profile?.current_plan || 'free',
+          to_plan: plan,
+        });
+
+      // Refresh profile
+      await fetchProfile(user.id);
+
+      return { error: null };
+    } catch (error) {
+      console.error('Upgrade plan error:', error);
+      return { error };
     }
   };
 
   const value: AuthContextType = {
     user,
     session,
+    profile,
     loading,
     login,
+    signIn,
     signUp,
+    upgradePlan,
     logout,
   };
 
