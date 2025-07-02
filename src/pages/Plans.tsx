@@ -5,10 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Check, Star, Crown, Zap } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const Plans = () => {
   const { profile } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const currentPlan = profile?.current_plan || 'free';
 
   const plans = [
@@ -25,12 +28,12 @@ const Plans = () => {
         'Até 50 transações por mês',
         'Suporte por email'
       ],
-      paymentLink: null
+      stripeProductId: null
     },
     {
       id: 'bronze',
       name: 'Bronze',
-      price: 'R$ 29,90',
+      price: 'R$ 24',
       period: '/mês',
       icon: <Zap className="h-6 w-6" />,
       color: 'bg-orange-500',
@@ -41,12 +44,12 @@ const Plans = () => {
         'Gestão de propriedades',
         'Suporte prioritário'
       ],
-      paymentLink: 'https://pay.stripe.com/bronze-plan' // Substitua pelo link real
+      stripeProductId: 'prod_SbhzvjlMGFqb7M'
     },
     {
       id: 'silver',
       name: 'Silver',
-      price: 'R$ 59,90',
+      price: 'R$ 40',
       period: '/mês',
       icon: <Crown className="h-6 w-6" />,
       color: 'bg-gray-400',
@@ -58,12 +61,12 @@ const Plans = () => {
         'Relatórios personalizados',
         'Suporte 24/7'
       ],
-      paymentLink: 'https://pay.stripe.com/silver-plan' // Substitua pelo link real
+      stripeProductId: 'prod_Sbi3aWwuokUxJV'
     },
     {
       id: 'gold',
       name: 'Gold',
-      price: 'R$ 99,90',
+      price: 'R$ 64',
       period: '/mês',
       icon: <Crown className="h-6 w-6" />,
       color: 'bg-yellow-500',
@@ -75,18 +78,58 @@ const Plans = () => {
         'Backup automático',
         'Suporte dedicado'
       ],
-      paymentLink: 'https://pay.stripe.com/gold-plan' // Substitua pelo link real
+      stripeProductId: 'prod_Sbi44iGeJS1Qxf'
     }
   ];
 
-  const handleSelectPlan = (plan: any) => {
+  const handleSelectPlan = async (plan: any) => {
     if (plan.id === 'free') {
-      return; // Não há ação para o plano gratuito
+      return;
     }
     
-    if (plan.paymentLink) {
-      // Redirecionar para a página de pagamento
-      window.open(plan.paymentLink, '_blank');
+    if (!plan.stripeProductId) {
+      toast({
+        title: "Erro",
+        description: "ID do produto não configurado",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Redirecionando...",
+        description: "Aguarde enquanto preparamos seu checkout",
+      });
+
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { 
+          planId: plan.id,
+          productId: plan.stripeProductId 
+        }
+      });
+
+      if (error) {
+        console.error('Erro ao criar checkout:', error);
+        toast({
+          title: "Erro",
+          description: "Não foi possível iniciar o processo de pagamento",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.url) {
+        // Redirecionar para o Stripe Checkout
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Erro no checkout:', error);
+      toast({
+        title: "Erro",
+        description: "Ocorreu um erro inesperado",
+        variant: "destructive",
+      });
     }
   };
 
