@@ -3,11 +3,10 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, DollarSign, UserPlus } from 'lucide-react';
+import { Users, UserPlus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import AddFriendModal from './AddFriendModal';
-import PixModal from './PixModal';
 
 interface Friend {
   id: string;
@@ -27,8 +26,6 @@ interface FriendsSectionProps {
 const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
   const { user } = useAuth();
   const [friends, setFriends] = useState<Friend[]>([]);
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
-  const [pixModalOpen, setPixModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -83,7 +80,7 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
           ...friendship,
           friend_id: friendId,
           friend_profile: profile ? {
-            full_name: profile.full_name || '',
+            full_name: profile.full_name || 'Usuário',
             email: profile.email || ''
           } : undefined,
           is_online: status?.is_online || false,
@@ -97,9 +94,22 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
     }
   };
 
-  const openPix = (friend: Friend) => {
-    setSelectedFriend(friend);
-    setPixModalOpen(true);
+  const getDisplayName = (friend: Friend) => {
+    if (friend.friend_profile?.full_name && friend.friend_profile.full_name.trim() !== '') {
+      return friend.friend_profile.full_name;
+    }
+    return friend.friend_profile?.email?.split('@')[0] || 'Usuário';
+  };
+
+  const getInitials = (friend: Friend) => {
+    const name = getDisplayName(friend);
+    if (name === 'Usuário') return 'U';
+    
+    const nameParts = name.split(' ');
+    if (nameParts.length >= 2) {
+      return (nameParts[0].charAt(0) + nameParts[1].charAt(0)).toUpperCase();
+    }
+    return name.charAt(0).toUpperCase();
   };
 
   return (
@@ -135,14 +145,14 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                        {friend.friend_profile?.full_name?.charAt(0) || 'A'}
+                        {getInitials(friend)}
                       </div>
                       <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-white ${
                         friend.is_online ? 'bg-green-500' : 'bg-gray-400'
                       }`} />
                     </div>
                     <div>
-                      <h4 className="font-medium">{friend.friend_profile?.full_name || 'Usuário'}</h4>
+                      <h4 className="font-medium">{getDisplayName(friend)}</h4>
                       <div className="flex items-center gap-2">
                         <p className="text-sm text-gray-600">{friend.friend_profile?.email}</p>
                         <Badge variant="outline" className={friend.is_online ? 'text-green-600' : 'text-gray-500'}>
@@ -151,31 +161,12 @@ const FriendsSection = ({ onAdd }: FriendsSectionProps) => {
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => openPix(friend)}
-                      className="hover:scale-110 transition-transform duration-200"
-                    >
-                      <DollarSign className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
               ))}
             </div>
           )}
         </CardContent>
       </Card>
-
-      {selectedFriend && (
-        <PixModal 
-          open={pixModalOpen}
-          onOpenChange={setPixModalOpen}
-          friend={selectedFriend}
-        />
-      )}
     </>
   );
 };
