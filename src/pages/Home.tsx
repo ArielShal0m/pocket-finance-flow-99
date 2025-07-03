@@ -245,7 +245,7 @@ const Home = () => {
                 <Badge variant="outline" className="mt-2">Ideal para iniciantes</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-3">
+                <div className="space-y-3 bg-green-400">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <span className="text-sm">Até 100 transações</span>
@@ -283,7 +283,7 @@ const Home = () => {
                 <div className="text-gray-500">/mês</div>
                 <Badge className="mt-2 text-green-800 bg-green-400">Para usuários ativos</Badge>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 bg-green-400">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
