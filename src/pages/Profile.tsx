@@ -35,6 +35,8 @@ const Profile = () => {
     phones, 
     friendships, 
     whatsappIntegration, 
+    fixedExpenses,
+    properties,
     loading, 
     refetch 
   } = useProfile();
@@ -172,11 +174,21 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="financial">
-            <FixedExpensesSection />
+            <FixedExpensesSection 
+              expenses={fixedExpenses || []}
+              onAdd={() => {}}
+              onEdit={() => {}}
+              onDelete={() => {}}
+            />
           </TabsContent>
 
           <TabsContent value="properties">
-            <PropertiesSection />
+            <PropertiesSection 
+              properties={properties || []}
+              onAdd={() => {}}
+              onEdit={() => {}}
+              onDelete={() => {}}
+            />
           </TabsContent>
 
           <TabsContent value="social">
@@ -184,7 +196,11 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="integrations">
-            <WhatsAppIntegration />
+            <WhatsAppIntegration 
+              integration={whatsappIntegration}
+              onSave={() => {}}
+              onToggle={() => {}}
+            />
           </TabsContent>
         </Tabs>
 

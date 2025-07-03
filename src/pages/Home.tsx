@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -584,7 +583,7 @@ const Home = () => {
       <LoginModal 
         open={isLoginModalOpen} 
         onOpenChange={setIsLoginModalOpen}
-        onSignUpClick={() => {
+        onSwitchToSignUp={() => {
           setIsLoginModalOpen(false);
           setIsSignUpModalOpen(true);
         }}
@@ -593,7 +592,7 @@ const Home = () => {
       <SignUpModal 
         open={isSignUpModalOpen} 
         onOpenChange={setIsSignUpModalOpen}
-        onLoginClick={() => {
+        onSwitchToLogin={() => {
           setIsSignUpModalOpen(false);
           setIsLoginModalOpen(true);
         }}
