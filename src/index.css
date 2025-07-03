@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -39,6 +38,12 @@
     transform: translateY(30px);
   }
   
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -72,6 +77,17 @@
     }
   }
   
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
   .animate-pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
@@ -102,6 +118,11 @@
     background: linear-gradient(135deg, #15803d 0%, #047857 100%);
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3);
+  }
+
+  /* Enhanced button styles */
+  .enhanced-button {
+    @apply rounded-lg shadow-md border-0 transition-all duration-200 hover:scale-105 hover:shadow-lg;
   }
 
   /* Animation delays */
@@ -165,6 +186,26 @@
       font-size: clamp(1.5rem, 4vw, 3rem);
     }
   }
+
+  /* Dropdown menu fixes */
+  .dropdown-menu-content {
+    @apply bg-white border border-gray-200 shadow-lg rounded-lg z-50;
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Select dropdown fixes */
+  .select-content {
+    @apply bg-white border border-gray-200 shadow-lg rounded-lg z-50;
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .select-item {
+    @apply text-gray-900 hover:bg-gray-100;
+  }
 }
 
 /* Scrollbar personalizada */
@@ -188,4 +229,23 @@
 /* Smooth transitions */
 * {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Fix dropdown transparency issues */
+[data-radix-popper-content-wrapper] {
+  z-index: 50 !important;
+}
+
+[role="menu"], [role="listbox"] {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[role="menuitem"], [role="option"] {
+  color: #374151 !important;
+}
+
+[role="menuitem"]:hover, [role="option"]:hover {
+  background-color: #f3f4f6 !important;
 }

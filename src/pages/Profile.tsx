@@ -1,48 +1,56 @@
 
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { 
+  MapPin, 
+  Phone, 
+  Building, 
+  Calendar, 
+  DollarSign, 
+  Wallet,
+  Users,
+  MessageSquare,
+  Plus
+} from 'lucide-react';
 import ProfileHeader from '@/components/ProfileHeader';
 import FixedExpensesSection from '@/components/FixedExpensesSection';
 import PropertiesSection from '@/components/PropertiesSection';
-import WhatsAppIntegration from '@/components/WhatsAppIntegration';
 import FriendsSection from '@/components/FriendsSection';
+import WhatsAppIntegration from '@/components/WhatsAppIntegration';
 import AddAddressModal from '@/components/AddAddressModal';
 import AddPhoneModal from '@/components/AddPhoneModal';
-import AddFixedExpenseModal from '@/components/AddFixedExpenseModal';
-import AddPropertyModal from '@/components/AddPropertyModal';
 import AddFriendModal from '@/components/AddFriendModal';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Plus, MapPin, Phone, Users, MessageCircle, Calendar } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 
 const Profile = () => {
-  const {
-    fixedExpenses,
-    properties,
-    addresses,
-    phones,
-    friendships,
-    whatsappIntegration,
-    loading,
-    refetch,
+  const { user } = useAuth();
+  const { 
+    addresses, 
+    phones, 
+    friendships, 
+    whatsappIntegration, 
+    loading, 
+    refetch 
   } = useProfile();
 
   const [isAddAddressModalOpen, setIsAddAddressModalOpen] = useState(false);
   const [isAddPhoneModalOpen, setIsAddPhoneModalOpen] = useState(false);
-  const [isAddFixedExpenseModalOpen, setIsAddFixedExpenseModalOpen] = useState(false);
-  const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   const [isAddFriendModalOpen, setIsAddFriendModalOpen] = useState(false);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <Skeleton className="h-48 w-full" />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <Skeleton className="h-48 w-full rounded-xl" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-64 w-full" />
+              <Skeleton key={i} className="h-64 w-full rounded-xl" />
             ))}
           </div>
         </div>
@@ -51,65 +59,35 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <BackButton />
+        
         <ProfileHeader />
 
-        <Tabs defaultValue="expenses" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 animate-slide-in-right [animation-delay:100ms]">
-            <TabsTrigger value="expenses" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Gastos Fixos
-            </TabsTrigger>
-            <TabsTrigger value="properties" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              Imóveis
-            </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              Contatos
-            </TabsTrigger>
-            <TabsTrigger value="friends" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Amigos
-            </TabsTrigger>
-            <TabsTrigger value="whatsapp" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              WhatsApp
-            </TabsTrigger>
+        <Tabs defaultValue="personal" className="w-full">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsTrigger value="personal">Pessoal</TabsTrigger>
+            <TabsTrigger value="financial">Financeiro</TabsTrigger>
+            <TabsTrigger value="properties">Propriedades</TabsTrigger>
+            <TabsTrigger value="social">Social</TabsTrigger>
+            <TabsTrigger value="integrations">Integrações</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="expenses" className="space-y-6">
-            <FixedExpensesSection
-              expenses={fixedExpenses}
-              onAdd={() => setIsAddFixedExpenseModalOpen(true)}
-              onEdit={(expense) => console.log('Edit expense:', expense)}
-              onDelete={(id) => console.log('Delete expense:', id)}
-            />
-          </TabsContent>
-
-          <TabsContent value="properties" className="space-y-6">
-            <PropertiesSection
-              properties={properties}
-              onAdd={() => setIsAddPropertyModalOpen(true)}
-              onEdit={(property) => console.log('Edit property:', property)}
-              onDelete={(id) => console.log('Delete property:', id)}
-            />
-          </TabsContent>
-
-          <TabsContent value="contacts" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="animate-fade-in [animation-delay:400ms]">
+          <TabsContent value="personal" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Addresses */}
+              <Card className="animate-fade-in">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-red-600" />
-                      Endereços
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                      Endereços ({addresses.length})
                     </CardTitle>
                     <Button 
-                      size="sm" 
+                      onClick={() => setIsAddAddressModalOpen(true)} 
+                      size="sm"
                       className="hover:scale-105 transition-transform duration-200"
-                      onClick={() => setIsAddAddressModalOpen(true)}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Adicionar
@@ -121,35 +99,23 @@ const Profile = () => {
                     <div className="text-center py-8 text-gray-500">
                       <MapPin className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                       <p>Nenhum endereço cadastrado</p>
-                      <Button 
-                        variant="outline" 
-                        className="mt-4"
-                        onClick={() => setIsAddAddressModalOpen(true)}
-                      >
-                        Adicionar Endereço
-                      </Button>
                     </div>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {addresses.map((address, index) => (
-                        <div 
-                          key={address.id} 
-                          className="p-3 bg-gray-50 rounded-lg animate-slide-in-right"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-medium">{address.label}</h4>
-                              <p className="text-sm text-gray-600">
-                                {address.street}, {address.city} - {address.state}
-                              </p>
-                            </div>
+                        <div key={address.id} className="p-4 bg-gray-50 rounded-lg animate-slide-in-right" style={{ animationDelay: `${index * 100}ms` }}>
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">{address.label}</h4>
                             {address.is_primary && (
-                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              <Badge variant="outline" className="text-blue-600 border-blue-200">
                                 Principal
-                              </span>
+                              </Badge>
                             )}
                           </div>
+                          <p className="text-sm text-gray-600">
+                            {address.street}, {address.city} - {address.state}
+                          </p>
+                          <p className="text-sm text-gray-500">CEP: {address.zip_code}</p>
                         </div>
                       ))}
                     </div>
@@ -157,17 +123,18 @@ const Profile = () => {
                 </CardContent>
               </Card>
 
-              <Card className="animate-fade-in [animation-delay:500ms]">
+              {/* Phones */}
+              <Card className="animate-fade-in [animation-delay:200ms]">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                       <Phone className="h-5 w-5 text-green-600" />
-                      Telefones
+                      Telefones ({phones.length})
                     </CardTitle>
                     <Button 
-                      size="sm" 
+                      onClick={() => setIsAddPhoneModalOpen(true)} 
+                      size="sm"
                       className="hover:scale-105 transition-transform duration-200"
-                      onClick={() => setIsAddPhoneModalOpen(true)}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Adicionar
@@ -179,31 +146,20 @@ const Profile = () => {
                     <div className="text-center py-8 text-gray-500">
                       <Phone className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                       <p>Nenhum telefone cadastrado</p>
-                      <Button 
-                        variant="outline" 
-                        className="mt-4"
-                        onClick={() => setIsAddPhoneModalOpen(true)}
-                      >
-                        Adicionar Telefone
-                      </Button>
                     </div>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {phones.map((phone, index) => (
-                        <div 
-                          key={phone.id} 
-                          className="p-3 bg-gray-50 rounded-lg animate-slide-in-right"
-                          style={{ animationDelay: `${index * 100}ms` }}
-                        >
+                        <div key={phone.id} className="p-4 bg-gray-50 rounded-lg animate-slide-in-right" style={{ animationDelay: `${index * 100}ms` }}>
                           <div className="flex items-center justify-between">
                             <div>
                               <h4 className="font-medium">{phone.label}</h4>
                               <p className="text-sm text-gray-600">{phone.number}</p>
                             </div>
                             {phone.is_primary && (
-                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                              <Badge variant="outline" className="text-green-600 border-green-200">
                                 Principal
-                              </span>
+                              </Badge>
                             )}
                           </div>
                         </div>
@@ -215,49 +171,51 @@ const Profile = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="friends" className="space-y-6">
+          <TabsContent value="financial">
+            <FixedExpensesSection />
+          </TabsContent>
+
+          <TabsContent value="properties">
+            <PropertiesSection />
+          </TabsContent>
+
+          <TabsContent value="social">
             <FriendsSection onAdd={() => setIsAddFriendModalOpen(true)} />
           </TabsContent>
 
-          <TabsContent value="whatsapp" className="space-y-6">
-            <WhatsAppIntegration
-              integration={whatsappIntegration}
-              onSave={(data) => console.log('Save WhatsApp integration:', data)}
-              onToggle={(isActive) => console.log('Toggle WhatsApp:', isActive)}
-            />
+          <TabsContent value="integrations">
+            <WhatsAppIntegration />
           </TabsContent>
         </Tabs>
+
+        {/* Modals */}
+        <AddAddressModal 
+          open={isAddAddressModalOpen}
+          onOpenChange={setIsAddAddressModalOpen}
+          onSuccess={() => {
+            setIsAddAddressModalOpen(false);
+            refetch();
+          }}
+        />
+
+        <AddPhoneModal 
+          open={isAddPhoneModalOpen}
+          onOpenChange={setIsAddPhoneModalOpen}
+          onSuccess={() => {
+            setIsAddPhoneModalOpen(false);
+            refetch();
+          }}
+        />
+
+        <AddFriendModal 
+          open={isAddFriendModalOpen}
+          onOpenChange={setIsAddFriendModalOpen}
+          onSuccess={() => {
+            setIsAddFriendModalOpen(false);
+            refetch();
+          }}
+        />
       </div>
-
-      <AddAddressModal 
-        open={isAddAddressModalOpen} 
-        onOpenChange={setIsAddAddressModalOpen}
-        onSuccess={refetch}
-      />
-
-      <AddPhoneModal 
-        open={isAddPhoneModalOpen} 
-        onOpenChange={setIsAddPhoneModalOpen}
-        onSuccess={refetch}
-      />
-
-      <AddFixedExpenseModal 
-        open={isAddFixedExpenseModalOpen} 
-        onOpenChange={setIsAddFixedExpenseModalOpen}
-        onSuccess={refetch}
-      />
-
-      <AddPropertyModal 
-        open={isAddPropertyModalOpen} 
-        onOpenChange={setIsAddPropertyModalOpen}
-        onSuccess={refetch}
-      />
-
-      <AddFriendModal 
-        open={isAddFriendModalOpen} 
-        onOpenChange={setIsAddFriendModalOpen}
-        onSuccess={refetch}
-      />
     </div>
   );
 };

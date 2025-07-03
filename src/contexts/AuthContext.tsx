@@ -1,7 +1,7 @@
-
 import { createContext, useContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface Profile {
   id: string;
@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -63,6 +64,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const updateOnlineStatus = async (userId: string, isOnline: boolean) => {
+    try {
+      await supabase
+        .from('user_status')
+        .upsert({
+          user_id: userId,
+          is_online: isOnline,
+          last_seen: new Date().toISOString(),
+        });
+    } catch (error) {
+      console.error('Error updating online status:', error);
+    }
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -70,38 +85,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         console.log('Initializing auth...');
         
-        // Primeiro configura o listener
+        // Configure auth state listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
           console.log('Auth state change:', event, session?.user?.id);
           
-          if (mounted) {
+          if (!mounted) return;
+
+          if (event === 'SIGNED_IN' && session?.user) {
             setSession(session);
-            setUser(session?.user || null);
-            
-            if (session?.user) {
-              await fetchProfile(session.user.id);
-            } else {
-              setProfile(null);
-            }
-            
-            setLoading(false);
+            setUser(session.user);
+            await fetchProfile(session.user.id);
+            await updateOnlineStatus(session.user.id, true);
+          } else if (event === 'SIGNED_OUT') {
+            setSession(null);
+            setUser(null);
+            setProfile(null);
           }
+          
+          setLoading(false);
         });
 
-        // Depois verifica a sessão atual
+        // Check for existing session
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
           console.error('Error getting session:', sessionError);
+          if (mounted) setLoading(false);
+          return;
         }
         
         if (mounted) {
           console.log('Initial session:', session?.user?.id);
-          setSession(session);
-          setUser(session?.user || null);
           
           if (session?.user) {
+            setSession(session);
+            setUser(session.user);
             await fetchProfile(session.user.id);
+            await updateOnlineStatus(session.user.id, true);
           }
           
           setLoading(false);
@@ -120,8 +140,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     initializeAuth();
 
+    // Handle page visibility changes
+    const handleVisibilityChange = () => {
+      if (user) {
+        updateOnlineStatus(user.id, !document.hidden);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       mounted = false;
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (user) {
+        updateOnlineStatus(user.id, false);
+      }
     };
   }, []);
 
@@ -131,27 +164,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       
       // Update status to offline before logout
       if (user) {
-        await supabase
-          .from('user_status')
-          .upsert({
-            user_id: user.id,
-            is_online: false,
-            last_seen: new Date().toISOString(),
-          });
+        await updateOnlineStatus(user.id, false);
       }
 
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Logout error:', error);
+        toast({
+          title: "Erro ao sair",
+          description: "Não foi possível fazer logout. Tente novamente.",
+          variant: "destructive",
+        });
         return;
       }
       
-      // Clear state immediately after signout
+      // Clear state
       setUser(null);
       setSession(null);
       setProfile(null);
+      
+      toast({
+        title: "Logout realizado",
+        description: "Você foi desconectado com sucesso.",
+      });
     } catch (error) {
       console.error('Logout error:', error);
+      toast({
+        title: "Erro ao sair",
+        description: "Ocorreu um erro inesperado.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -167,9 +209,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       });
       if (error) throw error;
-      alert('Check your email for the login link!');
+      toast({
+        title: "Link enviado!",
+        description: "Verifique seu email para fazer login.",
+      });
     } catch (error) {
       console.error('Login error:', error);
+      toast({
+        title: "Erro no login",
+        description: "Não foi possível enviar o link. Tente novamente.",
+        variant: "destructive",
+      });
       throw error;
     } finally {
       setLoading(false);
@@ -183,6 +233,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email,
         password,
       });
+      
+      if (error) {
+        toast({
+          title: "Erro no login",
+          description: "Email ou senha incorretos.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Login realizado!",
+          description: "Bem-vindo de volta!",
+        });
+      }
+      
       return { error };
     } catch (error) {
       console.error('SignIn error:', error);
@@ -206,14 +270,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      if (error) return { error };
+      if (error) {
+        toast({
+          title: "Erro no cadastro",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error };
+      }
 
-      // Update the user's profile immediately after signup
-      if (data.user) {
-        await supabase
-          .from('profiles')
-          .update({ full_name: fullName })
-          .eq('id', data.user.id);
+      if (data.user && !data.session) {
+        toast({
+          title: "Verifique seu email",
+          description: "Um link de confirmação foi enviado para seu email.",
+        });
+      } else if (data.session) {
+        toast({
+          title: "Conta criada!",
+          description: "Bem-vindo ao Finance Flow!",
+        });
       }
 
       return { error: null };
@@ -250,6 +325,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Refresh profile
       await fetchProfile(user.id);
+
+      toast({
+        title: "Plano atualizado!",
+        description: `Seu plano foi alterado para ${plan.toUpperCase()} com sucesso.`,
+      });
 
       return { error: null };
     } catch (error) {

@@ -13,7 +13,8 @@ import FreeDashboard from '@/components/FreeDashboard';
 import BronzeDashboard from '@/components/BronzeDashboard';
 import SilverDashboard from '@/components/SilverDashboard';
 import GoldDashboard from '@/components/GoldDashboard';
-import UserMenu from '@/components/UserMenu';
+import UserProfileDropdown from '@/components/UserProfileDropdown';
+import BackButton from '@/components/BackButton';
 import { usePlan } from '@/contexts/PlanContext';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -75,19 +76,22 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header with User Menu */}
+        {/* Header with Back Button and User Menu */}
         <div className="flex justify-between items-center">
-          <div className="text-center flex-1">
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              Gerenciador Financeiro
-            </h1>
-            <p className="text-xl text-muted-foreground">
-              Controle suas finanças de forma simples e eficiente
-            </p>
+          <div className="flex items-center gap-4">
+            <BackButton />
+            <div className="text-center flex-1">
+              <h1 className="text-4xl font-bold text-foreground mb-4">
+                Gerenciador Financeiro
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                Controle suas finanças de forma simples e eficiente
+              </p>
+            </div>
           </div>
           
           <div className="flex items-center">
-            <UserMenu />
+            <UserProfileDropdown />
           </div>
         </div>
 
