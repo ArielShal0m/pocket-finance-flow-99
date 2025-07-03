@@ -4,44 +4,26 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  PiggyBank, 
-  Smartphone, 
-  BarChart3, 
-  Shield, 
-  Zap, 
-  Users, 
-  Star,
-  ArrowRight,
-  CheckCircle,
-  TrendingUp,
-  MessageSquare,
-  DollarSign,
-  Clock,
-  Award,
-  Crown,
-  Medal
-} from 'lucide-react';
+import { PiggyBank, Smartphone, BarChart3, Shield, Zap, Users, Star, ArrowRight, CheckCircle, TrendingUp, MessageSquare, DollarSign, Clock, Award, Crown, Medal } from 'lucide-react';
 import LoginModal from '@/components/LoginModal';
 import SignUpModal from '@/components/SignUpModal';
 import UserProfileDropdown from '@/components/UserProfileDropdown';
-
 const Home = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
-
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ 
+      element.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
     }
   };
-
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
@@ -49,7 +31,6 @@ const Home = () => {
       setIsSignUpModalOpen(true);
     }
   };
-
   const handleLogin = () => {
     if (user) {
       navigate('/dashboard');
@@ -57,9 +38,7 @@ const Home = () => {
       setIsLoginModalOpen(true);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
+  return <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
       {/* Header */}
       <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-green-100 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
@@ -88,25 +67,14 @@ const Home = () => {
             </nav>
 
             <div className="flex items-center gap-4">
-              {user ? (
-                <UserProfileDropdown />
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleLogin}
-                    className="hover:scale-105 transition-all duration-200 shadow-md"
-                  >
+              {user ? <UserProfileDropdown /> : <div className="flex items-center gap-2">
+                  <Button variant="outline" onClick={handleLogin} className="hover:scale-105 transition-all duration-200 shadow-md">
                     Entrar
                   </Button>
-                  <Button 
-                    onClick={handleGetStarted}
-                    className="bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-md"
-                  >
+                  <Button onClick={handleGetStarted} className="bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-md">
                     Começar Agora
                   </Button>
-                </div>
-              )}
+                </div>}
             </div>
           </div>
         </div>
@@ -125,20 +93,11 @@ const Home = () => {
               Registre gastos com uma frase, receba alertas e veja seu dinheiro render mais todo mês.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in [animation-delay:400ms]">
-              <Button 
-                size="lg" 
-                onClick={handleGetStarted}
-                className="bg-green-600 hover:bg-green-700 text-lg px-8 py-4 hover:scale-105 transition-all duration-200 shadow-lg"
-              >
+              <Button size="lg" onClick={handleGetStarted} className="bg-green-600 hover:bg-green-700 text-lg px-8 py-4 hover:scale-105 transition-all duration-200 shadow-lg rounded">
                 Comece Agora - R$0,00 para testar
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                onClick={() => scrollToSection('funcionalidades')}
-                className="text-lg px-8 py-4 hover:scale-105 transition-all duration-200 shadow-md"
-              >
+              <Button size="lg" variant="outline" onClick={() => scrollToSection('funcionalidades')} className="text-lg px-8 py-4 hover:scale-105 transition-all duration-200 shadow-md rounded">
                 Ver Funcionalidades
               </Button>
             </div>
@@ -150,18 +109,29 @@ const Home = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { number: '10,000+', label: 'Usuários Ativos', icon: Users },
-              { number: '95%', label: 'Satisfação', icon: Star },
-              { number: 'R$2M+', label: 'Economizados', icon: DollarSign },
-              { number: '24/7', label: 'Suporte', icon: Clock }
-            ].map((stat, index) => (
-              <div key={index} className="text-center animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {[{
+            number: '10,000+',
+            label: 'Usuários Ativos',
+            icon: Users
+          }, {
+            number: '95%',
+            label: 'Satisfação',
+            icon: Star
+          }, {
+            number: 'R$2M+',
+            label: 'Economizados',
+            icon: DollarSign
+          }, {
+            number: '24/7',
+            label: 'Suporte',
+            icon: Clock
+          }].map((stat, index) => <div key={index} className="text-center animate-fade-in" style={{
+            animationDelay: `${index * 100}ms`
+          }}>
                 <stat.icon className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
                 <div className="text-gray-600">{stat.label}</div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -179,39 +149,33 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: MessageSquare,
-                title: 'Registro Automático via WhatsApp',
-                description: 'Registre gastos enviando uma mensagem simples: "Comprei uma barra de chocolate de 5 reais"'
-              },
-              {
-                icon: BarChart3,
-                title: 'Controle e Gráficos',
-                description: 'Visualize suas receitas e despesas com gráficos intuitivos e relatórios detalhados'
-              },
-              {
-                icon: TrendingUp,
-                title: 'Dicas de Investimento',
-                description: 'Receba dicas práticas e personalizadas para fazer seu dinheiro render mais'
-              },
-              {
-                icon: Shield,
-                title: 'Segurança Total',
-                description: 'Seus dados estão protegidos com criptografia de ponta a ponta'
-              },
-              {
-                icon: Zap,
-                title: 'Alertas Inteligentes',
-                description: 'Receba notificações sobre gastos, metas e oportunidades de economia'
-              },
-              {
-                icon: Smartphone,
-                title: 'Acesso Mobile',
-                description: 'Controle suas finanças de qualquer lugar, otimizado para dispositivos móveis'
-              }
-            ].map((feature, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 hover:scale-105 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {[{
+            icon: MessageSquare,
+            title: 'Registro Automático via WhatsApp',
+            description: 'Registre gastos enviando uma mensagem simples: "Comprei uma barra de chocolate de 5 reais"'
+          }, {
+            icon: BarChart3,
+            title: 'Controle e Gráficos',
+            description: 'Visualize suas receitas e despesas com gráficos intuitivos e relatórios detalhados'
+          }, {
+            icon: TrendingUp,
+            title: 'Dicas de Investimento',
+            description: 'Receba dicas práticas e personalizadas para fazer seu dinheiro render mais'
+          }, {
+            icon: Shield,
+            title: 'Segurança Total',
+            description: 'Seus dados estão protegidos com criptografia de ponta a ponta'
+          }, {
+            icon: Zap,
+            title: 'Alertas Inteligentes',
+            description: 'Receba notificações sobre gastos, metas e oportunidades de economia'
+          }, {
+            icon: Smartphone,
+            title: 'Acesso Mobile',
+            description: 'Controle suas finanças de qualquer lugar, otimizado para dispositivos móveis'
+          }].map((feature, index) => <Card key={index} className="hover:shadow-lg transition-all duration-300 hover:scale-105 animate-fade-in" style={{
+            animationDelay: `${index * 100}ms`
+          }}>
                 <CardHeader>
                   <feature.icon className="h-12 w-12 text-green-600 mb-4" />
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
@@ -219,8 +183,7 @@ const Home = () => {
                 <CardContent>
                   <CardDescription className="text-base">{feature.description}</CardDescription>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -266,11 +229,7 @@ const Home = () => {
                     <span className="text-sm">Suporte por email</span>
                   </div>
                 </div>
-                <Button 
-                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
-                  variant="outline"
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" variant="outline" onClick={handleGetStarted}>
                   Começar Grátis
                 </Button>
               </CardContent>
@@ -304,11 +263,7 @@ const Home = () => {
                     <span className="text-sm">Categorização automática</span>
                   </div>
                 </div>
-                <Button 
-                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
-                  variant="outline"
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" variant="outline" onClick={handleGetStarted}>
                   Escolher Bronze
                 </Button>
               </CardContent>
@@ -326,7 +281,7 @@ const Home = () => {
                 <CardTitle className="text-2xl">Silver</CardTitle>
                 <div className="text-3xl font-bold text-green-600">R$40</div>
                 <div className="text-gray-500">/mês</div>
-                <Badge className="mt-2 bg-green-100 text-green-800">Para usuários ativos</Badge>
+                <Badge className="mt-2 text-green-800 bg-green-400">Para usuários ativos</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -347,10 +302,7 @@ const Home = () => {
                     <span className="text-sm">Suporte prioritário</span>
                   </div>
                 </div>
-                <Button 
-                  className="w-full mt-6 bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-lg" 
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full mt-6 bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-lg" onClick={handleGetStarted}>
                   Escolher Silver
                 </Button>
               </CardContent>
@@ -363,7 +315,7 @@ const Home = () => {
                 <CardTitle className="text-2xl">Gold</CardTitle>
                 <div className="text-3xl font-bold text-gray-900">R$64</div>
                 <div className="text-gray-500">/mês</div>
-                <Badge variant="outline" className="mt-2">Profissional</Badge>
+                <Badge variant="outline" className="mt-2 bg-green-400">Profissional</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -384,11 +336,7 @@ const Home = () => {
                     <span className="text-sm">Suporte 24/7</span>
                   </div>
                 </div>
-                <Button 
-                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
-                  variant="outline"
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" variant="outline" onClick={handleGetStarted}>
                   Escolher Gold
                 </Button>
               </CardContent>
@@ -407,34 +355,27 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Maria Silva',
-                role: 'Empresária',
-                avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b95c?w=100&h=100&fit=crop&crop=face',
-                text: 'Em 2 meses, economizei R$600 só controlando pequenos gastos com o WhatsApp!'
-              },
-              {
-                name: 'João Santos',
-                role: 'Freelancer',
-                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-                text: 'Finalmente consegui organizar minhas finanças de forma simples e eficiente.'
-              },
-              {
-                name: 'Ana Costa',
-                role: 'Professora',
-                avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-                text: 'O Finance Flow mudou completamente minha relação com o dinheiro!'
-              }
-            ].map((testimonial, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {[{
+            name: 'Maria Silva',
+            role: 'Empresária',
+            avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b95c?w=100&h=100&fit=crop&crop=face',
+            text: 'Em 2 meses, economizei R$600 só controlando pequenos gastos com o WhatsApp!'
+          }, {
+            name: 'João Santos',
+            role: 'Freelancer',
+            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+            text: 'Finalmente consegui organizar minhas finanças de forma simples e eficiente.'
+          }, {
+            name: 'Ana Costa',
+            role: 'Professora',
+            avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+            text: 'O Finance Flow mudou completamente minha relação com o dinheiro!'
+          }].map((testimonial, index) => <Card key={index} className="hover:shadow-lg transition-all duration-300 animate-fade-in" style={{
+            animationDelay: `${index * 100}ms`
+          }}>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <img 
-                      src={testimonial.avatar} 
-                      alt={testimonial.name}
-                      className="w-12 h-12 rounded-full"
-                    />
+                    <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full" />
                     <div>
                       <div className="font-semibold">{testimonial.name}</div>
                       <div className="text-sm text-gray-600">{testimonial.role}</div>
@@ -442,8 +383,7 @@ const Home = () => {
                   </div>
                   <p className="text-gray-700 italic">"{testimonial.text}"</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -495,7 +435,7 @@ const Home = () => {
                   <MessageSquare className="h-12 w-12 text-green-600 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold mb-2">Chat Online</h3>
                   <p className="text-gray-600 mb-4">Suporte em tempo real durante horário comercial</p>
-                  <Button className="bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-md">
+                  <Button className="bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-md rounded">
                     Iniciar Chat
                   </Button>
                 </CardContent>
@@ -505,7 +445,7 @@ const Home = () => {
                   <MessageSquare className="h-12 w-12 text-green-600 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold mb-2">WhatsApp</h3>
                   <p className="text-gray-600 mb-4">Fale conosco diretamente pelo WhatsApp</p>
-                  <Button variant="outline" className="hover:scale-105 transition-all duration-200 shadow-md">
+                  <Button variant="outline" className="hover:scale-105 transition-all duration-200 shadow-md text-base rounded">
                     Enviar Mensagem
                   </Button>
                 </CardContent>
@@ -524,11 +464,7 @@ const Home = () => {
           <p className="text-xl mb-8 animate-fade-in [animation-delay:200ms]">
             Comece gratuitamente e veja a diferença em poucos dias
           </p>
-          <Button 
-            size="lg" 
-            onClick={handleGetStarted}
-            className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4 hover:scale-105 transition-all duration-200 shadow-lg animate-fade-in [animation-delay:400ms]"
-          >
+          <Button size="lg" onClick={handleGetStarted} className="bg-white text-green-600 hover:bg-gray-100 text-lg px-8 py-4 hover:scale-105 transition-all duration-200 shadow-lg animate-fade-in [animation-delay:400ms] rounded">
             Começar Agora - Grátis
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
@@ -580,25 +516,15 @@ const Home = () => {
       </footer>
 
       {/* Modals */}
-      <LoginModal 
-        open={isLoginModalOpen} 
-        onOpenChange={setIsLoginModalOpen}
-        onSwitchToSignUp={() => {
-          setIsLoginModalOpen(false);
-          setIsSignUpModalOpen(true);
-        }}
-      />
+      <LoginModal open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen} onSwitchToSignUp={() => {
+      setIsLoginModalOpen(false);
+      setIsSignUpModalOpen(true);
+    }} />
       
-      <SignUpModal 
-        open={isSignUpModalOpen} 
-        onOpenChange={setIsSignUpModalOpen}
-        onSwitchToLogin={() => {
-          setIsSignUpModalOpen(false);
-          setIsLoginModalOpen(true);
-        }}
-      />
-    </div>
-  );
+      <SignUpModal open={isSignUpModalOpen} onOpenChange={setIsSignUpModalOpen} onSwitchToLogin={() => {
+      setIsSignUpModalOpen(false);
+      setIsLoginModalOpen(true);
+    }} />
+    </div>;
 };
-
 export default Home;
