@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSupabaseFinanceData } from '@/hooks/useSupabaseFinanceData';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -12,12 +13,20 @@ import ProfileEditModal from './ProfileEditModal';
 const ProfileHeader = () => {
   const { user, profile } = useAuth();
   const { currentPlan } = usePlan();
+  const { getFinancialSummary } = useSupabaseFinanceData();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // Get real data from dashboard
+  const summary = getFinancialSummary();
+  const thisMonthTransactions = summary.thisMonthTransactions || 0;
+  const currentBalance = summary.balance || 0;
+  const monthlyGoalPercentage = summary.monthlyGoalPercentage || 0;
 
   const getPlanIcon = () => {
     switch (currentPlan) {
       case 'gold': return <Crown className="h-4 w-4" />;
       case 'silver': return <Medal className="h-4 w-4" />;
+      case 'bronze': return <Medal className="h-4 w-4" />;
       default: return <Award className="h-4 w-4" />;
     }
   };
@@ -26,7 +35,8 @@ const ProfileHeader = () => {
     switch (currentPlan) {
       case 'gold': return 'bg-yellow-500';
       case 'silver': return 'bg-gray-400';
-      default: return 'bg-orange-500';
+      case 'bronze': return 'bg-orange-500';
+      default: return 'bg-green-500';
     }
   };
 
@@ -40,6 +50,13 @@ const ProfileHeader = () => {
         .slice(0, 2);
     }
     return profile?.email?.charAt(0).toUpperCase() || 'U';
+  };
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
   };
 
   return (
@@ -99,15 +116,15 @@ const ProfileHeader = () => {
         <CardContent className="relative pt-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-white/60 rounded-lg backdrop-blur-sm animate-scale-in [animation-delay:300ms]">
-              <div className="text-2xl font-bold text-blue-600">12</div>
+              <div className="text-2xl font-bold text-blue-600">{thisMonthTransactions}</div>
               <div className="text-sm text-gray-600">Transações este mês</div>
             </div>
             <div className="text-center p-4 bg-white/60 rounded-lg backdrop-blur-sm animate-scale-in [animation-delay:400ms]">
-              <div className="text-2xl font-bold text-green-600">R$ 2.450</div>
+              <div className="text-2xl font-bold text-green-600">{formatCurrency(currentBalance)}</div>
               <div className="text-sm text-gray-600">Saldo atual</div>
             </div>
             <div className="text-center p-4 bg-white/60 rounded-lg backdrop-blur-sm animate-scale-in [animation-delay:500ms]">
-              <div className="text-2xl font-bold text-purple-600">89%</div>
+              <div className="text-2xl font-bold text-purple-600">{Math.round(monthlyGoalPercentage)}%</div>
               <div className="text-sm text-gray-600">Meta do mês</div>
             </div>
           </div>

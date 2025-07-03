@@ -37,6 +37,10 @@ const UserProfileDropdown = () => {
     return profile?.email?.charAt(0).toUpperCase() || 'U';
   };
 
+  const getDisplayName = () => {
+    return profile?.full_name || 'Usuário';
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -53,7 +57,7 @@ const UserProfileDropdown = () => {
       >
         <div className="px-4 py-3">
           <p className="text-sm font-medium text-gray-900">
-            {profile?.full_name || 'Usuário'}
+            {getDisplayName()}
           </p>
           <p className="text-xs text-gray-500">
             {profile?.email}

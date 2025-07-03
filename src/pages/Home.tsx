@@ -1,6 +1,8 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePlan } from '@/contexts/PlanContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,13 +10,19 @@ import { PiggyBank, Smartphone, BarChart3, Shield, Zap, Users, Star, ArrowRight,
 import LoginModal from '@/components/LoginModal';
 import SignUpModal from '@/components/SignUpModal';
 import UserProfileDropdown from '@/components/UserProfileDropdown';
+import SubscriptionSuccessModal from '@/components/SubscriptionSuccessModal';
+import { useToast } from '@/hooks/use-toast';
+
 const Home = () => {
   const navigate = useNavigate();
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
+  const { setCurrentPlan } = usePlan();
+  const { toast } = useToast();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isSubscriptionSuccessOpen, setIsSubscriptionSuccessOpen] = useState(false);
+  const [subscribedPlan, setSubscribedPlan] = useState('');
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -24,6 +32,7 @@ const Home = () => {
       });
     }
   };
+
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
@@ -31,6 +40,7 @@ const Home = () => {
       setIsSignUpModalOpen(true);
     }
   };
+
   const handleLogin = () => {
     if (user) {
       navigate('/dashboard');
@@ -38,9 +48,36 @@ const Home = () => {
       setIsLoginModalOpen(true);
     }
   };
-  return <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
+
+  const handlePlanSelect = async (planType: string) => {
+    if (!user) {
+      setIsSignUpModalOpen(true);
+      return;
+    }
+
+    try {
+      // Simulate plan upgrade
+      await setCurrentPlan(planType as any);
+      setSubscribedPlan(planType);
+      setIsSubscriptionSuccessOpen(true);
+      
+      toast({
+        title: "Plano atualizado!",
+        description: `Você agora tem acesso ao plano ${planType}.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao atualizar plano",
+        description: "Não foi possível atualizar seu plano. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-green-100 z-50 shadow-sm">
+      <header className="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-green-100 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -67,14 +104,27 @@ const Home = () => {
             </nav>
 
             <div className="flex items-center gap-4">
-              {user ? <UserProfileDropdown /> : <div className="flex items-center gap-2">
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/dashboard')} 
+                    className="hover:scale-105 transition-all duration-200 shadow-md"
+                  >
+                    Painel de Controle
+                  </Button>
+                  <UserProfileDropdown />
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
                   <Button variant="outline" onClick={handleLogin} className="hover:scale-105 transition-all duration-200 shadow-md">
                     Entrar
                   </Button>
                   <Button onClick={handleGetStarted} className="bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-md">
                     Começar Agora
                   </Button>
-                </div>}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -229,7 +279,11 @@ const Home = () => {
                     <span className="text-sm">Suporte por email</span>
                   </div>
                 </div>
-                <Button className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" variant="outline" onClick={handleGetStarted}>
+                <Button 
+                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
+                  variant="outline" 
+                  onClick={() => handlePlanSelect('free')}
+                >
                   Começar Grátis
                 </Button>
               </CardContent>
@@ -245,7 +299,7 @@ const Home = () => {
                 <Badge variant="outline" className="mt-2">Ideal para iniciantes</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-3 bg-green-400">
+                <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
                     <span className="text-sm">Até 100 transações</span>
@@ -263,7 +317,11 @@ const Home = () => {
                     <span className="text-sm">Categorização automática</span>
                   </div>
                 </div>
-                <Button className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" variant="outline" onClick={handleGetStarted}>
+                <Button 
+                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
+                  variant="outline" 
+                  onClick={() => handlePlanSelect('bronze')}
+                >
                   Escolher Bronze
                 </Button>
               </CardContent>
@@ -283,7 +341,7 @@ const Home = () => {
                 <div className="text-gray-500">/mês</div>
                 <Badge className="mt-2 text-green-800 bg-green-400">Para usuários ativos</Badge>
               </CardHeader>
-              <CardContent className="space-y-4 bg-green-400">
+              <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-500" />
@@ -302,7 +360,10 @@ const Home = () => {
                     <span className="text-sm">Suporte prioritário</span>
                   </div>
                 </div>
-                <Button className="w-full mt-6 bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-lg" onClick={handleGetStarted}>
+                <Button 
+                  className="w-full mt-6 bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-lg" 
+                  onClick={() => handlePlanSelect('silver')}
+                >
                   Escolher Silver
                 </Button>
               </CardContent>
@@ -315,7 +376,7 @@ const Home = () => {
                 <CardTitle className="text-2xl">Gold</CardTitle>
                 <div className="text-3xl font-bold text-gray-900">R$64</div>
                 <div className="text-gray-500">/mês</div>
-                <Badge variant="outline" className="mt-2 bg-green-400">Profissional</Badge>
+                <Badge variant="outline" className="mt-2">Profissional</Badge>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -336,7 +397,11 @@ const Home = () => {
                     <span className="text-sm">Suporte 24/7</span>
                   </div>
                 </div>
-                <Button className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" variant="outline" onClick={handleGetStarted}>
+                <Button 
+                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
+                  variant="outline" 
+                  onClick={() => handlePlanSelect('gold')}
+                >
                   Escolher Gold
                 </Button>
               </CardContent>
@@ -516,15 +581,31 @@ const Home = () => {
       </footer>
 
       {/* Modals */}
-      <LoginModal open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen} onSwitchToSignUp={() => {
-      setIsLoginModalOpen(false);
-      setIsSignUpModalOpen(true);
-    }} />
+      <LoginModal 
+        open={isLoginModalOpen} 
+        onOpenChange={setIsLoginModalOpen} 
+        onSwitchToSignUp={() => {
+          setIsLoginModalOpen(false);
+          setIsSignUpModalOpen(true);
+        }} 
+      />
       
-      <SignUpModal open={isSignUpModalOpen} onOpenChange={setIsSignUpModalOpen} onSwitchToLogin={() => {
-      setIsSignUpModalOpen(false);
-      setIsLoginModalOpen(true);
-    }} />
-    </div>;
+      <SignUpModal 
+        open={isSignUpModalOpen} 
+        onOpenChange={setIsSignUpModalOpen} 
+        onSwitchToLogin={() => {
+          setIsSignUpModalOpen(false);
+          setIsLoginModalOpen(true);
+        }} 
+      />
+
+      <SubscriptionSuccessModal
+        open={isSubscriptionSuccessOpen}
+        onOpenChange={setIsSubscriptionSuccessOpen}
+        planName={subscribedPlan}
+      />
+    </div>
+  );
 };
+
 export default Home;
