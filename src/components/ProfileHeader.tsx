@@ -13,14 +13,27 @@ import ProfileEditModal from './ProfileEditModal';
 const ProfileHeader = () => {
   const { user, profile } = useAuth();
   const { currentPlan } = usePlan();
-  const { getFinancialSummary } = useSupabaseFinanceData();
+  const { getFinancialSummary, transactions } = useSupabaseFinanceData();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Get real data from dashboard
   const summary = getFinancialSummary();
-  const thisMonthTransactions = summary.thisMonthTransactions || 0;
-  const currentBalance = summary.balance || 0;
-  const monthlyGoalPercentage = summary.monthlyGoalPercentage || 0;
+  
+  // Calculate this month's transactions
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+  
+  const thisMonthTransactions = transactions.filter(transaction => {
+    const transactionDate = new Date(transaction.date);
+    return transactionDate.getMonth() === currentMonth && 
+           transactionDate.getFullYear() === currentYear;
+  }).length;
+
+  // Calculate monthly goal percentage (using a simple metric based on expenses vs income)
+  const monthlyGoalPercentage = summary.totalIncome > 0 
+    ? Math.min(100, ((summary.totalIncome - summary.totalExpenses) / summary.totalIncome) * 100)
+    : 0;
 
   const getPlanIcon = () => {
     switch (currentPlan) {
@@ -120,7 +133,7 @@ const ProfileHeader = () => {
               <div className="text-sm text-gray-600">Transações este mês</div>
             </div>
             <div className="text-center p-4 bg-white/60 rounded-lg backdrop-blur-sm animate-scale-in [animation-delay:400ms]">
-              <div className="text-2xl font-bold text-green-600">{formatCurrency(currentBalance)}</div>
+              <div className="text-2xl font-bold text-green-600">{formatCurrency(summary.balance)}</div>
               <div className="text-sm text-gray-600">Saldo atual</div>
             </div>
             <div className="text-center p-4 bg-white/60 rounded-lg backdrop-blur-sm animate-scale-in [animation-delay:500ms]">
