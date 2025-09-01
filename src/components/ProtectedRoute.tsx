@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   console.log('ProtectedRoute - user:', user, 'loading:', loading);
 
-  // Mostrar skeleton enquanto carrega
+  // Show skeleton while loading
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
@@ -27,18 +27,26 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
               <Skeleton key={i} className="h-32 w-full" />
             ))}
           </div>
+          
+          {/* Loading indicator */}
+          <div className="text-center mt-8">
+            <div className="inline-flex items-center gap-2 text-muted-foreground">
+              <div className="animate-spin h-4 w-4 border-2 border-green-500 border-t-transparent rounded-full"></div>
+              <span>Carregando seus dados...</span>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Se não há usuário, redirecionar para auth
+  // If no user, redirect to auth
   if (!user) {
     console.log('No user, redirecting to auth');
     return <Navigate to="/auth" replace />;
   }
 
-  // Se há usuário, mostrar o conteúdo
+  // If user exists, show content
   return <>{children}</>;
 };
 

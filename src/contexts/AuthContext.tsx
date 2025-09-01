@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -80,11 +81,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    let loadingTimeout: NodeJS.Timeout;
 
     const initializeAuth = async () => {
       try {
         console.log('Initializing auth...');
         
+        // Set timeout to prevent infinite loading
+        loadingTimeout = setTimeout(() => {
+          if (mounted) {
+            console.log('Auth initialization timeout - setting loading to false');
+            setLoading(false);
+          }
+        }, 10000); // 10 seconds timeout
+
         // Configure auth state listener
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
           console.log('Auth state change:', event, session?.user?.id);
@@ -94,15 +104,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (event === 'SIGNED_IN' && session?.user) {
             setSession(session);
             setUser(session.user);
-            await fetchProfile(session.user.id);
-            await updateOnlineStatus(session.user.id, true);
+            // Defer profile fetch to avoid blocking
+            setTimeout(() => {
+              if (mounted) {
+                fetchProfile(session.user.id);
+                updateOnlineStatus(session.user.id, true);
+              }
+            }, 0);
           } else if (event === 'SIGNED_OUT') {
             setSession(null);
             setUser(null);
             setProfile(null);
           }
           
-          setLoading(false);
+          // Clear timeout and set loading to false
+          clearTimeout(loadingTimeout);
+          if (mounted) {
+            setLoading(false);
+          }
         });
 
         // Check for existing session
@@ -110,6 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         
         if (sessionError) {
           console.error('Error getting session:', sessionError);
+          clearTimeout(loadingTimeout);
           if (mounted) setLoading(false);
           return;
         }
@@ -120,10 +140,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (session?.user) {
             setSession(session);
             setUser(session.user);
-            await fetchProfile(session.user.id);
-            await updateOnlineStatus(session.user.id, true);
+            // Defer profile operations
+            setTimeout(() => {
+              if (mounted) {
+                fetchProfile(session.user.id);
+                updateOnlineStatus(session.user.id, true);
+              }
+            }, 0);
           }
           
+          clearTimeout(loadingTimeout);
           setLoading(false);
         }
 
@@ -132,6 +158,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
       } catch (error) {
         console.error('Error in auth initialization:', error);
+        clearTimeout(loadingTimeout);
         if (mounted) {
           setLoading(false);
         }
@@ -142,7 +169,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Handle page visibility changes
     const handleVisibilityChange = () => {
-      if (user) {
+      if (user && mounted) {
         updateOnlineStatus(user.id, !document.hidden);
       }
     };
@@ -151,6 +178,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       mounted = false;
+      clearTimeout(loadingTimeout);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (user) {
         updateOnlineStatus(user.id, false);
@@ -245,6 +273,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           title: "Login realizado!",
           description: "Bem-vindo de volta!",
         });
+        // Redirect after successful login
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
       }
       
       return { error };
@@ -289,6 +321,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           title: "Conta criada!",
           description: "Bem-vindo ao Finance Flow!",
         });
+        // Redirect after successful signup
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
       }
 
       return { error: null };

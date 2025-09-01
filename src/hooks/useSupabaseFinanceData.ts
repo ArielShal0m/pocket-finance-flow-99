@@ -10,9 +10,13 @@ export const useSupabaseFinanceData = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTransactions = async () => {
-    if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
     
     try {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from('transactions')
         .select('*')
@@ -43,6 +47,13 @@ export const useSupabaseFinanceData = () => {
   };
 
   useEffect(() => {
+    // Always set loading to false if no user
+    if (!user) {
+      setIsLoading(false);
+      setTransactions([]);
+      return;
+    }
+    
     fetchTransactions();
   }, [user]);
 
