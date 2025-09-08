@@ -72,6 +72,11 @@ const App = () => (
                   <GoldDashboard />
                 </ProtectedRoute>
               } />
+              <Route path="/dashboard/enterprise/*" element={
+                <ProtectedRoute>
+                  <EnterpriseDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/profile" element={
                 <ProtectedRoute>
                   <Profile />
