@@ -17,6 +17,7 @@ import FreeDashboard from "./pages/FreeDashboard";
 import BronzeDashboard from "./pages/BronzeDashboard";
 import SilverDashboard from "./pages/SilverDashboard";
 import GoldDashboard from "./pages/GoldDashboard";
+import EnterpriseDashboard from "./pages/EnterpriseDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({

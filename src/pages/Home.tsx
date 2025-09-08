@@ -6,7 +6,7 @@ import { usePlan } from '@/contexts/PlanContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PiggyBank, Smartphone, BarChart3, Shield, Zap, Users, Star, ArrowRight, CheckCircle, TrendingUp, MessageSquare, DollarSign, Clock, Award, Crown, Medal } from 'lucide-react';
+import { PiggyBank, Smartphone, BarChart3, Shield, Zap, Users, Star, ArrowRight, CheckCircle, TrendingUp, MessageSquare, DollarSign, Clock, Award, Crown, Medal, Building2, User, Briefcase } from 'lucide-react';
 import LoginModal from '@/components/LoginModal';
 import SignUpModal from '@/components/SignUpModal';
 import UserProfileDropdown from '@/components/UserProfileDropdown';
@@ -22,6 +22,7 @@ const Home = () => {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
   const [isSubscriptionSuccessOpen, setIsSubscriptionSuccessOpen] = useState(false);
   const [subscribedPlan, setSubscribedPlan] = useState('');
+  const [planType, setPlanType] = useState<'personal' | 'enterprise'>('personal');
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -245,168 +246,259 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
               Escolha o Plano Ideal
             </h2>
-            <p className="text-xl text-gray-600 animate-fade-in [animation-delay:200ms]">
+            <p className="text-xl text-gray-600 animate-fade-in [animation-delay:200ms] mb-8">
               Comece gratuitamente e evolua conforme suas necessidades
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            {/* Plano Gratuito */}
-            <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in">
-              <CardHeader className="text-center pb-4">
-                <Award className="h-12 w-12 text-gray-500 mx-auto mb-4" />
-                <CardTitle className="text-2xl">Gratuito</CardTitle>
-                <div className="text-3xl font-bold text-gray-900">R$0</div>
-                <div className="text-gray-500">/mês</div>
-                <Badge variant="outline" className="mt-2">Ideal para começar</Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Até 20 transações/mês</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Gráfico simples mensal</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Registro básico de gastos</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Suporte por email</span>
-                  </div>
-                </div>
-                <Button 
-                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
-                  variant="outline" 
-                  onClick={() => handlePlanSelect('free')}
-                >
-                  Começar Grátis
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Plano Bronze */}
-            <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in [animation-delay:100ms]">
-              <CardHeader className="text-center pb-4">
-                <Medal className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                <CardTitle className="text-2xl">Bronze</CardTitle>
-                <div className="text-3xl font-bold text-gray-900">R$24</div>
-                <div className="text-gray-500">/mês</div>
-                <Badge variant="outline" className="mt-2">Ideal para iniciantes</Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Até 100 transações</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Relatórios básicos</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Suporte por email</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Categorização automática</span>
-                  </div>
-                </div>
-                <Button 
-                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
-                  variant="outline" 
-                  onClick={() => handlePlanSelect('bronze')}
-                >
-                  Escolher Bronze
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Plano Silver - Destacado */}
-            <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in [animation-delay:200ms] ring-2 ring-green-500 scale-105">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-green-500 text-white px-4 py-1 text-sm font-bold">
-                  MAIS POPULAR
-                </Badge>
+            
+            {/* Plan Type Toggle */}
+            <div className="flex items-center justify-center gap-4 mb-8 animate-fade-in [animation-delay:300ms]">
+              <div className="flex items-center gap-2">
+                <User className="h-5 w-5 text-gray-600" />
+                <span className={`text-sm font-medium ${planType === 'personal' ? 'text-green-600' : 'text-gray-500'}`}>
+                  Pessoa Física
+                </span>
               </div>
-              <CardHeader className="text-center pb-4">
-                <Crown className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <CardTitle className="text-2xl">Silver</CardTitle>
-                <div className="text-3xl font-bold text-green-600">R$40</div>
-                <div className="text-gray-500">/mês</div>
-                <Badge className="mt-2 text-green-800 bg-green-400">Para usuários ativos</Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Transações ilimitadas</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Insights automáticos</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Exportação de dados</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Suporte prioritário</span>
-                  </div>
-                </div>
-                <Button 
-                  className="w-full mt-6 bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-lg" 
-                  onClick={() => handlePlanSelect('silver')}
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="plan-toggle"
+                  checked={planType === 'enterprise'}
+                  onChange={(e) => setPlanType(e.target.checked ? 'enterprise' : 'personal')}
+                  className="sr-only"
+                />
+                <label
+                  htmlFor="plan-toggle"
+                  className={`block w-14 h-8 rounded-full cursor-pointer transition-colors duration-200 ${
+                    planType === 'enterprise' ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
                 >
-                  Escolher Silver
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Plano Gold */}
-            <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in [animation-delay:300ms]">
-              <CardHeader className="text-center pb-4">
-                <Crown className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                <CardTitle className="text-2xl">Gold</CardTitle>
-                <div className="text-3xl font-bold text-gray-900">R$64</div>
-                <div className="text-gray-500">/mês</div>
-                <Badge variant="outline" className="mt-2">Profissional</Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Integração com bancos</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Dashboard executivo</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Consultoria financeira</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-sm">Suporte 24/7</span>
-                  </div>
-                </div>
-                <Button 
-                  className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
-                  variant="outline" 
-                  onClick={() => handlePlanSelect('gold')}
-                >
-                  Escolher Gold
-                </Button>
-              </CardContent>
-            </Card>
+                  <div
+                    className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-200 ${
+                      planType === 'enterprise' ? 'transform translate-x-6' : ''
+                    }`}
+                  />
+                </label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-gray-600" />
+                <span className={`text-sm font-medium ${planType === 'enterprise' ? 'text-green-600' : 'text-gray-500'}`}>
+                  Empresarial
+                </span>
+              </div>
+            </div>
           </div>
+
+          {planType === 'personal' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              {/* Plano Gratuito */}
+              <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in">
+                <CardHeader className="text-center pb-4">
+                  <Award className="h-12 w-12 text-gray-500 mx-auto mb-4" />
+                  <CardTitle className="text-2xl">Gratuito</CardTitle>
+                  <div className="text-3xl font-bold text-gray-900">R$0</div>
+                  <div className="text-gray-500">/mês</div>
+                  <Badge variant="outline" className="mt-2">Ideal para começar</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Até 20 transações/mês</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Gráfico simples mensal</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Registro básico de gastos</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Suporte por email</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
+                    variant="outline" 
+                    onClick={() => handlePlanSelect('free')}
+                  >
+                    Começar Grátis
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Plano Bronze */}
+              <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in [animation-delay:100ms]">
+                <CardHeader className="text-center pb-4">
+                  <Medal className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                  <CardTitle className="text-2xl">Bronze</CardTitle>
+                  <div className="text-3xl font-bold text-gray-900">R$24</div>
+                  <div className="text-gray-500">/mês</div>
+                  <Badge variant="outline" className="mt-2">Ideal para iniciantes</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Até 100 transações</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Relatórios básicos</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Suporte por email</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Categorização automática</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
+                    variant="outline" 
+                    onClick={() => handlePlanSelect('bronze')}
+                  >
+                    Escolher Bronze
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Plano Silver - Destacado */}
+              <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in [animation-delay:200ms] ring-2 ring-green-500 scale-105">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-green-500 text-white px-4 py-1 text-sm font-bold">
+                    MAIS POPULAR
+                  </Badge>
+                </div>
+                <CardHeader className="text-center pb-4">
+                  <Crown className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <CardTitle className="text-2xl">Silver</CardTitle>
+                  <div className="text-3xl font-bold text-green-600">R$40</div>
+                  <div className="text-gray-500">/mês</div>
+                  <Badge className="mt-2 text-green-800 bg-green-400">Para usuários ativos</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Transações ilimitadas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Insights automáticos</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Exportação de dados</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Suporte prioritário</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full mt-6 bg-green-600 hover:bg-green-700 hover:scale-105 transition-all duration-200 shadow-lg" 
+                    onClick={() => handlePlanSelect('silver')}
+                  >
+                    Escolher Silver
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Plano Gold */}
+              <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in [animation-delay:300ms]">
+                <CardHeader className="text-center pb-4">
+                  <Crown className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+                  <CardTitle className="text-2xl">Gold</CardTitle>
+                  <div className="text-3xl font-bold text-gray-900">R$64</div>
+                  <div className="text-gray-500">/mês</div>
+                  <Badge variant="outline" className="mt-2">Profissional</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Integração com bancos</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Dashboard executivo</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Consultoria financeira</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Suporte 24/7</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full mt-6 hover:scale-105 transition-all duration-200 shadow-md" 
+                    variant="outline" 
+                    onClick={() => handlePlanSelect('gold')}
+                  >
+                    Escolher Gold
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+              {/* Plano Enterprise (único plano empresarial) */}
+              <Card className="relative hover:shadow-lg transition-all duration-300 animate-fade-in ring-2 ring-purple-500">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-1 text-sm font-bold">
+                    ENTERPRISE
+                  </Badge>
+                </div>
+                <CardHeader className="text-center pb-4">
+                  <Building2 className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                  <CardTitle className="text-2xl">Enterprise</CardTitle>
+                  <div className="text-3xl font-bold text-purple-600">R$200</div>
+                  <div className="text-gray-500">/mês</div>
+                  <Badge className="mt-2 text-purple-800 bg-purple-400">Grandes corporações</Badge>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Usuários ilimitados</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Multi-empresas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">API personalizada</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">Suporte dedicado</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">White-label</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <span className="text-sm">SLA garantido</span>
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full mt-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 hover:scale-105 transition-all duration-200 shadow-lg text-white" 
+                    onClick={() => handlePlanSelect('enterprise')}
+                  >
+                    Escolher Enterprise
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </section>
 

@@ -13,6 +13,7 @@ import FreeDashboard from '@/components/FreeDashboard';
 import BronzeDashboard from '@/components/BronzeDashboard';
 import SilverDashboard from '@/components/SilverDashboard';
 import GoldDashboard from '@/components/GoldDashboard';
+import EnterpriseDashboard from '@/components/EnterpriseDashboard';
 import UserProfileDropdown from '@/components/UserProfileDropdown';
 import BackButton from '@/components/BackButton';
 import { usePlan } from '@/contexts/PlanContext';
@@ -68,6 +69,8 @@ const Index = () => {
         return <SilverDashboard />;
       case 'gold':
         return <GoldDashboard />;
+      case 'enterprise':
+        return <EnterpriseDashboard />;
       default:
         return <FreeDashboard />;
     }

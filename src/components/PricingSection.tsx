@@ -60,6 +60,27 @@ const PricingSection = () => {
         'Suporte 24/7',
         'Consultoria financeira mensal'
       ]
+    },
+    {
+      name: 'Enterprise',
+      description: 'Para empresas e grandes corporações',
+      monthlyPrice: 200.00,
+      annualPrice: 180.00, // Valor da parcela mensal no plano anual
+      color: 'bg-gradient-to-br from-purple-50 to-indigo-100 border-purple-300',
+      buttonColor: 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700',
+      features: [
+        'Todos os recursos do Gold',
+        'Gestão multi-empresas',
+        'Relatórios corporativos avançados',
+        'API personalizada',
+        'Integração com ERPs',
+        'Suporte dedicado',
+        'Treinamento personalizado',
+        'SLA garantido',
+        'Backup automático',
+        'Usuários ilimitados',
+        'White-label disponível'
+      ]
     }
   ];
 
@@ -104,7 +125,7 @@ const PricingSection = () => {
         </div>
 
         {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => {
             const currentPrice = isAnnual ? plan.annualPrice : plan.monthlyPrice;
             const savings = calculateSavings(plan.monthlyPrice, plan.annualPrice);

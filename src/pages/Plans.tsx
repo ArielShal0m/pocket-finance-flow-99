@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Check, Star, Crown, Zap, Loader2 } from 'lucide-react';
+import { Check, Star, Crown, Zap, Loader2, Building2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -86,6 +86,28 @@ const Plans = () => {
         'Suporte dedicado'
       ],
       stripeProductId: 'prod_Sbi44iGeJS1Qxf'
+    },
+    {
+      id: 'enterprise',
+      name: 'Enterprise',
+      price: 'R$ 200',
+      period: '/mês',
+      icon: <Building2 className="h-6 w-6" />,
+      color: 'bg-gradient-to-r from-purple-600 to-indigo-600',
+      features: [
+        'Todos os recursos do Gold',
+        'Gestão multi-empresas',
+        'Relatórios corporativos avançados',
+        'API personalizada',
+        'Integração com ERPs',
+        'Suporte dedicado',
+        'Treinamento personalizado',
+        'SLA garantido',
+        'Backup automático',
+        'Usuários ilimitados',
+        'White-label disponível'
+      ],
+      stripeProductId: 'prod_SyZPYS3lBQxexW'
     }
   ];
 
@@ -160,8 +182,8 @@ const Plans = () => {
             <Skeleton className="h-6 w-64 mx-auto" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[...Array(4)].map((_, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+            {[...Array(5)].map((_, i) => (
               <Card key={i} className="shadow-lg">
                 <CardHeader className="text-center pb-2">
                   <Skeleton className="w-12 h-12 rounded-full mx-auto mb-4" />
@@ -196,7 +218,7 @@ const Plans = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {plans.map((plan) => (
             <Card 
               key={plan.id}

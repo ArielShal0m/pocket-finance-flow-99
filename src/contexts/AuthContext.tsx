@@ -9,7 +9,7 @@ interface Profile {
   email: string | null;
   full_name: string | null;
   avatar_url: string | null;
-  current_plan: 'free' | 'bronze' | 'silver' | 'gold';
+  current_plan: 'free' | 'bronze' | 'silver' | 'gold' | 'enterprise';
   plan_started_at: string | null;
   created_at: string;
   updated_at: string;
@@ -23,7 +23,7 @@ interface AuthContextType {
   login: (email: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
-  upgradePlan: (plan: 'free' | 'bronze' | 'silver' | 'gold') => Promise<{ error: any }>;
+  upgradePlan: (plan: 'free' | 'bronze' | 'silver' | 'gold' | 'enterprise') => Promise<{ error: any }>;
   logout: () => Promise<void>;
 }
 
@@ -336,7 +336,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const upgradePlan = async (plan: 'free' | 'bronze' | 'silver' | 'gold') => {
+  const upgradePlan = async (plan: 'free' | 'bronze' | 'silver' | 'gold' | 'enterprise') => {
     if (!user) return { error: 'User not authenticated' };
 
     try {
