@@ -1,12 +1,7 @@
 import EnterpriseDashboard from '@/components/EnterpriseDashboard';
-import AppSidebar from '@/components/AppSidebar';
 
 const EnterpriseDashboardPage = () => {
-  return (
-    <AppSidebar>
-      <EnterpriseDashboard />
-    </AppSidebar>
-  );
+  return <EnterpriseDashboard />;
 };
 
 export default EnterpriseDashboardPage;

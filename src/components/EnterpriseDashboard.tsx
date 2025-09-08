@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useSearchParams } from 'react-router-dom';
+import AppSidebar from '@/components/AppSidebar';
 
 const EnterpriseDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -94,605 +95,587 @@ const EnterpriseDashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard Enterprise</h1>
-          <p className="text-gray-600">Visão geral completa da sua organização</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-            <Building2 className="h-4 w-4 mr-1" />
-            Enterprise
-          </Badge>
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Exportar Relatório
-          </Button>
-        </div>
-      </div>
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Receita Total</p>
-                <p className="text-2xl font-bold text-gray-900">R$ 2.45M</p>
-                <div className="flex items-center mt-1">
-                  <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">+12.5%</span>
+    <div className="flex h-screen bg-muted/10">
+      <AppSidebar>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900">Dashboard Enterprise</h1>
+                  <p className="text-gray-600">Visão geral completa da sua organização</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                    <Building2 className="h-4 w-4 mr-1" />
+                    Enterprise
+                  </Badge>
+                  <Button variant="outline" size="sm">
+                    <Download className="h-4 w-4 mr-2" />
+                    Exportar Relatório
+                  </Button>
                 </div>
               </div>
-              <DollarSign className="h-8 w-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Usuários Ativos</p>
-                <p className="text-2xl font-bold text-gray-900">156</p>
-                <div className="flex items-center mt-1">
-                  <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">+8.2%</span>
-                </div>
-              </div>
-              <Users className="h-8 w-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Empresas</p>
-                <p className="text-2xl font-bold text-gray-900">8</p>
-                <div className="flex items-center mt-1">
-                  <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">+2</span>
-                </div>
-              </div>
-              <Building2 className="h-8 w-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Uptime</p>
-                <p className="text-2xl font-bold text-gray-900">99.9%</p>
-                <div className="flex items-center mt-1">
-                  <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-sm text-green-600">SLA Ativo</span>
-                </div>
-              </div>
-              <Shield className="h-8 w-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Dashboard Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="companies">Empresa</TabsTrigger>
-          <TabsTrigger value="users">Usuários</TabsTrigger>
-          <TabsTrigger value="reports">Relatórios</TabsTrigger>
-          <TabsTrigger value="settings">Configurações</TabsTrigger>
-          <TabsTrigger value="planning">Planejamento</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Recent Transactions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Transações Recentes
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentTransactions.map((transaction) => (
-                    <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${
-                          transaction.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'
-                        }`} />
-                        <div>
-                          <p className="font-medium">{transaction.company}</p>
-                          <p className="text-sm text-gray-600">{transaction.date}</p>
+              {/* Key Metrics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Receita Total</p>
+                        <p className="text-2xl font-bold text-gray-900">R$ 2.45M</p>
+                        <div className="flex items-center mt-1">
+                          <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
+                          <span className="text-sm text-green-600">+12.5%</span>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className={`font-bold ${
-                          transaction.type === 'Receita' ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {transaction.type === 'Receita' ? '+' : '-'}R$ {transaction.amount.toLocaleString()}
-                        </p>
-                        <Badge variant={transaction.status === 'completed' ? 'default' : 'secondary'}>
-                          {transaction.status === 'completed' ? 'Concluído' : 'Pendente'}
-                        </Badge>
-                      </div>
+                      <DollarSign className="h-8 w-8 text-green-500" />
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
 
-            {/* Performance Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Performance Mensal
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Meta de Receita</span>
-                    <span className="text-sm font-medium">R$ 2.5M</span>
-                  </div>
-                  <Progress value={98} className="h-2" />
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Progresso</span>
-                    <span className="text-sm font-medium">98%</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="text-center p-4 border rounded-lg">
-                      <p className="text-2xl font-bold text-green-600">+15%</p>
-                      <p className="text-sm text-gray-600">vs. mês anterior</p>
-                    </div>
-                    <div className="text-center p-4 border rounded-lg">
-                      <p className="text-2xl font-bold text-blue-600">R$ 245K</p>
-                      <p className="text-sm text-gray-600">Economia mensal</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Enterprise Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="border-purple-200">
-              <CardContent className="p-6 text-center">
-                <Database className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-semibold mb-2">Integração ERP</h3>
-                <p className="text-sm text-gray-600 mb-4">Conectado com SAP</p>
-                <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-              </CardContent>
-            </Card>
-
-            <Card className="border-purple-200">
-              <CardContent className="p-6 text-center">
-                <Zap className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-semibold mb-2">API Personalizada</h3>
-                <p className="text-sm text-gray-600 mb-4">125K chamadas/mês</p>
-                <Badge className="bg-green-100 text-green-800">Funcionando</Badge>
-              </CardContent>
-            </Card>
-
-            <Card className="border-purple-200">
-              <CardContent className="p-6 text-center">
-                <Globe className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-semibold mb-2">White-Label</h3>
-                <p className="text-sm text-gray-600 mb-4">Marca personalizada</p>
-                <Badge className="bg-blue-100 text-blue-800">Configurado</Badge>
-              </CardContent>
-            </Card>
-
-            <Card className="border-purple-200">
-              <CardContent className="p-6 text-center">
-                <Shield className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-semibold mb-2">SLA Garantido</h3>
-                <p className="text-sm text-gray-600 mb-4">99.9% uptime</p>
-                <Badge className="bg-green-100 text-green-800">Cumprido</Badge>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="companies" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                Cadastro da Empresa
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>Nome</Label>
-                  <Input value={company.name} onChange={(e) => setCompany({ ...company, name: e.target.value })} />
-                </div>
-                <div>
-                  <Label>CNPJ</Label>
-                  <Input value={company.cnpj} onChange={(e) => setCompany({ ...company, cnpj: e.target.value })} />
-                </div>
-                <div>
-                  <Label>Email</Label>
-                  <Input value={company.email} onChange={(e) => setCompany({ ...company, email: e.target.value })} />
-                </div>
-                <div>
-                  <Label>Telefone</Label>
-                  <Input value={company.phone} onChange={(e) => setCompany({ ...company, phone: e.target.value })} />
-                </div>
-                <div className="md:col-span-2">
-                  <Label>Endereço</Label>
-                  <Input value={company.address} onChange={(e) => setCompany({ ...company, address: e.target.value })} />
-                </div>
-                <div className="md:col-span-2">
-                  <Label>Observações</Label>
-                  <Textarea rows={3} value={company.notes} onChange={(e) => setCompany({ ...company, notes: e.target.value })} />
-                </div>
-              </div>
-              <div className="flex justify-end mt-4">
-                <Button onClick={handleSaveCompany}>Salvar Empresa</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="users" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Gerenciamento de Usuários
-                </span>
-                <Button size="sm" onClick={() => setIsAddUserOpen(true)}>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Adicionar Usuário
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {teamMembers.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                        <span className="text-purple-600 font-semibold">
-                          {member.name.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium">{member.name}</p>
-                        <p className="text-sm text-gray-600">{member.role} • {member.email}</p>
+                        <p className="text-sm font-medium text-gray-600">Usuários Ativos</p>
+                        <p className="text-2xl font-bold text-gray-900">156</p>
+                        <div className="flex items-center mt-1">
+                          <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
+                          <span className="text-sm text-green-600">+8.2%</span>
+                        </div>
                       </div>
+                      <Users className="h-8 w-8 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <Badge variant={member.status === 'active' ? 'default' : 'secondary'}>
-                          {member.status === 'active' ? 'Ativo' : 'Inativo'}
-                        </Badge>
-                        <p className="text-sm text-gray-600 mt-1">{member.lastLogin}</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Empresas</p>
+                        <p className="text-2xl font-bold text-gray-900">8</p>
+                        <div className="flex items-center mt-1">
+                          <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
+                          <span className="text-sm text-green-600">+2</span>
+                        </div>
                       </div>
-                      <Button size="sm" variant="outline">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      <Building2 className="h-8 w-8 text-purple-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Uptime</p>
+                        <p className="text-2xl font-bold text-gray-900">99.9%</p>
+                        <div className="flex items-center mt-1">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
+                          <span className="text-sm text-green-600">SLA Ativo</span>
+                        </div>
+                      </div>
+                      <Shield className="h-8 w-8 text-green-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Main Content - Tabs sem TabsList */}
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                <TabsContent value="overview" className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Recent Transactions */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Activity className="h-5 w-5" />
+                          Transações Recentes
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {recentTransactions.map((transaction) => (
+                            <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-2 h-2 rounded-full ${
+                                  transaction.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'
+                                }`} />
+                                <div>
+                                  <p className="font-medium">{transaction.company}</p>
+                                  <p className="text-sm text-gray-600">{transaction.date}</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className={`font-bold ${
+                                  transaction.type === 'Receita' ? 'text-green-600' : 'text-red-600'
+                                }`}>
+                                  {transaction.type === 'Receita' ? '+' : '-'}R$ {transaction.amount.toLocaleString()}
+                                </p>
+                                <Badge variant={transaction.status === 'completed' ? 'default' : 'secondary'}>
+                                  {transaction.status === 'completed' ? 'Concluído' : 'Pendente'}
+                                </Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Performance Chart */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5" />
+                          Performance Mensal
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-600">Meta de Receita</span>
+                            <span className="text-sm font-medium">R$ 2.5M</span>
+                          </div>
+                          <Progress value={98} className="h-2" />
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-600">Progresso</span>
+                            <span className="text-sm font-medium">98%</span>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4 mt-6">
+                            <div className="text-center p-4 border rounded-lg">
+                              <p className="text-2xl font-bold text-green-600">+15%</p>
+                              <p className="text-sm text-gray-600">vs. mês anterior</p>
+                            </div>
+                            <div className="text-center p-4 border rounded-lg">
+                              <p className="text-2xl font-bold text-blue-600">R$ 245K</p>
+                              <p className="text-sm text-gray-600">Economia mensal</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Enterprise Features Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <Card className="border-purple-200">
+                      <CardContent className="p-6 text-center">
+                        <Database className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                        <h3 className="font-semibold mb-2">Integração ERP</h3>
+                        <p className="text-sm text-gray-600 mb-4">Conectado com SAP</p>
+                        <Badge className="bg-green-100 text-green-800">Ativo</Badge>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-purple-200">
+                      <CardContent className="p-6 text-center">
+                        <Zap className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                        <h3 className="font-semibold mb-2">API Personalizada</h3>
+                        <p className="text-sm text-gray-600 mb-4">125K chamadas/mês</p>
+                        <Badge className="bg-green-100 text-green-800">Funcionando</Badge>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-purple-200">
+                      <CardContent className="p-6 text-center">
+                        <Globe className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                        <h3 className="font-semibold mb-2">White-Label</h3>
+                        <p className="text-sm text-gray-600 mb-4">Marca personalizada</p>
+                        <Badge className="bg-blue-100 text-blue-800">Configurado</Badge>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="border-purple-200">
+                      <CardContent className="p-6 text-center">
+                        <Shield className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                        <h3 className="font-semibold mb-2">SLA Garantido</h3>
+                        <p className="text-sm text-gray-600 mb-4">99.9% uptime</p>
+                        <Badge className="bg-green-100 text-green-800">Cumprido</Badge>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="companies" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Building2 className="h-5 w-5" />
+                        Cadastro da Empresa
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label>Nome</Label>
+                          <Input value={company.name} onChange={(e) => setCompany({ ...company, name: e.target.value })} />
+                        </div>
+                        <div>
+                          <Label>CNPJ</Label>
+                          <Input value={company.cnpj} onChange={(e) => setCompany({ ...company, cnpj: e.target.value })} />
+                        </div>
+                        <div>
+                          <Label>Email</Label>
+                          <Input value={company.email} onChange={(e) => setCompany({ ...company, email: e.target.value })} />
+                        </div>
+                        <div>
+                          <Label>Telefone</Label>
+                          <Input value={company.phone} onChange={(e) => setCompany({ ...company, phone: e.target.value })} />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Label>Endereço</Label>
+                          <Input value={company.address} onChange={(e) => setCompany({ ...company, address: e.target.value })} />
+                        </div>
+                        <div className="md:col-span-2">
+                          <Label>Observações</Label>
+                          <Textarea rows={3} value={company.notes} onChange={(e) => setCompany({ ...company, notes: e.target.value })} />
+                        </div>
+                      </div>
+                      <div className="flex justify-end mt-4">
+                        <Button onClick={handleSaveCompany}>Salvar Empresa</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="users" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                          <Users className="h-5 w-5" />
+                          Gerenciamento de Usuários
+                        </span>
+                        <Button size="sm" onClick={() => setIsAddUserOpen(true)}>
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Adicionar Usuário
+                        </Button>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {teamMembers.map((member) => (
+                          <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                <span className="text-purple-600 font-semibold">
+                                  {member.name.split(' ').map(n => n[0]).join('')}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-medium">{member.name}</p>
+                                <p className="text-sm text-gray-600">{member.role} • {member.email}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <Badge variant={member.status === 'active' ? 'default' : 'secondary'}>
+                                  {member.status === 'active' ? 'Ativo' : 'Inativo'}
+                                </Badge>
+                                <p className="text-sm text-gray-600 mt-1">{member.lastLogin}</p>
+                              </div>
+                              <Button size="sm" variant="outline">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* User Activity History */}
+                      <div className="mt-8">
+                        <h3 className="text-lg font-semibold mb-4">Histórico de Atividades</h3>
+                        <div className="space-y-2">
+                          {userHistory.map((entry) => (
+                            <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+                              <span className="text-sm">{entry.action}</span>
+                              <div className="text-right">
+                                <p className="text-sm font-medium">{entry.actor}</p>
+                                <p className="text-xs text-gray-500">{entry.at}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="reports" className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          Relatórios Financeiros
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Balancete Mensal</p>
+                              <p className="text-sm text-gray-600">Janeiro 2024</p>
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4 mr-2" />
+                              Baixar
+                            </Button>
+                          </div>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">DRE - Demonstrativo</p>
+                              <p className="text-sm text-gray-600">Q1 2024</p>
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4 mr-2" />
+                              Baixar
+                            </Button>
+                          </div>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Fluxo de Caixa</p>
+                              <p className="text-sm text-gray-600">Últimos 6 meses</p>
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4 mr-2" />
+                              Baixar
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <BarChart3 className="h-5 w-5" />
+                          Relatórios de Performance
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Análise de Usuários</p>
+                              <p className="text-sm text-gray-600">Engajamento e uso</p>
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Eye className="h-4 w-4 mr-2" />
+                              Visualizar
+                            </Button>
+                          </div>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">ROI por Empresa</p>
+                              <p className="text-sm text-gray-600">Retorno sobre investimento</p>
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Eye className="h-4 w-4 mr-2" />
+                              Visualizar
+                            </Button>
+                          </div>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Benchmark Setorial</p>
+                              <p className="text-sm text-gray-600">Comparação com mercado</p>
+                            </div>
+                            <Button size="sm" variant="outline">
+                              <Eye className="h-4 w-4 mr-2" />
+                              Visualizar
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="settings" className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Settings className="h-5 w-5" />
+                          Configurações Gerais
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div>
+                            <Label>Nome da Organização</Label>
+                            <Input defaultValue="Minha Empresa LTDA" />
+                          </div>
+                          <div>
+                            <Label>Fuso Horário</Label>
+                            <Input defaultValue="America/Sao_Paulo" />
+                          </div>
+                          <div>
+                            <Label>Moeda Padrão</Label>
+                            <Input defaultValue="BRL - Real Brasileiro" />
+                          </div>
+                          <div>
+                            <Label>Formato de Data</Label>
+                            <Input defaultValue="DD/MM/AAAA" />
+                          </div>
+                        </div>
+                        <div className="flex justify-end mt-4">
+                          <Button>Salvar Configurações</Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Shield className="h-5 w-5" />
+                          Segurança
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Autenticação 2FA</p>
+                              <p className="text-sm text-gray-600">Segurança adicional</p>
+                            </div>
+                            <Badge className="bg-green-100 text-green-800">Ativo</Badge>
+                          </div>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Backup Automático</p>
+                              <p className="text-sm text-gray-600">Diário às 02:00</p>
+                            </div>
+                            <Badge className="bg-green-100 text-green-800">Ativo</Badge>
+                          </div>
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                              <p className="font-medium">Logs de Auditoria</p>
+                              <p className="text-sm text-gray-600">Rastreamento completo</p>
+                            </div>
+                            <Badge className="bg-green-100 text-green-800">Ativo</Badge>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="planning" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Target className="h-5 w-5" />
+                        Planejamento Estratégico 2024
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold">Metas Financeiras</h3>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 border rounded-lg">
+                              <span>Receita Anual</span>
+                              <span className="font-bold">R$ 30M</span>
+                            </div>
+                            <Progress value={82} className="h-2" />
+                            <p className="text-sm text-gray-600">82% da meta anual atingida</p>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 border rounded-lg">
+                              <span>Novos Clientes</span>
+                              <span className="font-bold">500</span>
+                            </div>
+                            <Progress value={65} className="h-2" />
+                            <p className="text-sm text-gray-600">65% da meta anual atingida</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold">Expansão</h3>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 border rounded-lg">
+                              <div>
+                                <p className="font-medium">Novo Escritório - Rio</p>
+                                <p className="text-sm text-gray-600">Q2 2024</p>
+                              </div>
+                              <Badge className="bg-yellow-100 text-yellow-800">Em Progresso</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 border rounded-lg">
+                              <div>
+                                <p className="font-medium">Certificação ISO</p>
+                                <p className="text-sm text-gray-600">Q3 2024</p>
+                              </div>
+                              <Badge className="bg-blue-100 text-blue-800">Planejado</Badge>
+                            </div>
+                            <div className="flex items-center justify-between p-3 border rounded-lg">
+                              <div>
+                                <p className="font-medium">Lançamento App Mobile</p>
+                                <p className="text-sm text-gray-600">Q4 2024</p>
+                              </div>
+                              <Badge className="bg-green-100 text-green-800">Aprovado</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+
+              {/* Add User Dialog */}
+              <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Adicionar Novo Usuário</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Nome Completo</Label>
+                      <Input 
+                        value={newUser.name} 
+                        onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} 
+                        placeholder="João Silva"
+                      />
+                    </div>
+                    <div>
+                      <Label>Email</Label>
+                      <Input 
+                        type="email"
+                        value={newUser.email} 
+                        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} 
+                        placeholder="joao@empresa.com"
+                      />
+                    </div>
+                    <div>
+                      <Label>Cargo</Label>
+                      <Input 
+                        value={newUser.role} 
+                        onChange={(e) => setNewUser({ ...newUser, role: e.target.value })} 
+                        placeholder="Analista"
+                      />
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Histórico de Alterações
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {userHistory.map((h) => (
-                  <div key={h.id} className="flex items-center justify-between p-3 border rounded-md">
-                    <div className="text-sm">
-                      <p className="font-medium">{h.action}</p>
-                      <p className="text-gray-600">por {h.actor}</p>
-                    </div>
-                    <span className="text-xs text-gray-500">{h.at}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Modal Adicionar Usuário */}
-          <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Adicionar Usuário</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-3">
-                <div>
-                  <Label>Nome</Label>
-                  <Input value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} />
-                </div>
-                <div>
-                  <Label>Email</Label>
-                  <Input type="email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
-                </div>
-                <div>
-                  <Label>Função</Label>
-                  <Input value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })} />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>Cancelar</Button>
-                <Button onClick={handleAddUser}>Adicionar</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </TabsContent>
-
-        <TabsContent value="reports" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Relatório Financeiro
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Relatório completo de receitas e despesas por empresa
-                </p>
-                <Button className="w-full">
-                  <Download className="h-4 w-4 mr-2" />
-                  Baixar PDF
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Análise de Performance
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Métricas de performance e crescimento por período
-                </p>
-                <Button className="w-full">
-                  <Download className="h-4 w-4 mr-2" />
-                  Baixar Excel
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Relatório de Usuários
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4">
-                  Atividade e engajamento dos usuários por empresa
-                </p>
-                <Button className="w-full">
-                  <Download className="h-4 w-4 mr-2" />
-                  Baixar CSV
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Configurações Gerais
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Backup Automático</p>
-                    <p className="text-sm text-gray-600">Backup diário às 02:00</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Notificações por Email</p>
-                    <p className="text-sm text-gray-600">Relatórios semanais</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">API Rate Limit</p>
-                    <p className="text-sm text-gray-600">1000 req/min</p>
-                  </div>
-                  <Button size="sm" variant="outline">Editar</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Segurança e Compliance
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Autenticação 2FA</p>
-                    <p className="text-sm text-gray-600">Obrigatório para todos</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Auditoria de Logs</p>
-                    <p className="text-sm text-gray-600">Retenção de 1 ano</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">LGPD Compliance</p>
-                    <p className="text-sm text-gray-600">Conformidade total</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Planejamento Financeiro */}
-        <TabsContent value="planning" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Orçamento Empresarial
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label>Receita Prevista (mês)</Label>
-                  <Input defaultValue={250000} />
-                </div>
-                <div>
-                  <Label>Despesas Previstas (mês)</Label>
-                  <Input defaultValue={180000} />
-                </div>
-                <div>
-                  <Label>Investimentos (mês)</Label>
-                  <Input defaultValue={20000} />
-                </div>
-              </div>
-              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 border rounded-md">
-                  <p className="text-sm text-gray-600">Margem prevista</p>
-                  <p className="text-2xl font-bold text-green-600">R$ 50.000</p>
-                  <Progress value={72} className="h-2 mt-2" />
-                  <p className="text-xs text-gray-500 mt-1">72% da meta</p>
-                </div>
-                <div className="p-4 border rounded-md">
-                  <p className="text-sm text-gray-600">Reserva de caixa</p>
-                  <p className="text-2xl font-bold text-blue-600">R$ 300.000</p>
-                  <Progress value={60} className="h-2 mt-2" />
-                  <p className="text-xs text-gray-500 mt-1">Meta semestral</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Previsão de Fluxo de Caixa
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {['Jan', 'Fev', 'Mar'].map((m, i) => (
-                  <div key={i} className="p-3 border rounded-md">
-                    <p className="text-sm text-gray-600">{m}</p>
-                    <p className="text-lg font-semibold">Saldo projetado</p>
-                    <p className="text-xl text-gray-900">R$ {(200000 + i*15000).toLocaleString()}</p>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Metas Financeiras
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 border rounded-md">
-                  <p className="font-medium">Reduzir custos fixos em 10%</p>
-                  <Progress value={35} className="h-2 mt-2" />
-                  <p className="text-xs text-gray-500 mt-1">Prazo: 90 dias</p>
-                </div>
-                <div className="p-4 border rounded-md">
-                  <p className="font-medium">Aumentar lucratividade em 15%</p>
-                  <Progress value={50} className="h-2 mt-2" />
-                  <p className="text-xs text-gray-500 mt-1">Prazo: 6 meses</p>
-                </div>
-                <div className="p-4 border rounded-md">
-                  <p className="font-medium">Investir em crescimento (Marketing)</p>
-                  <Progress value={20} className="h-2 mt-2" />
-                  <p className="text-xs text-gray-500 mt-1">Budget: R$ 100k</p>
-                </div>
-                <div className="p-4 border rounded-md">
-                  <p className="font-medium">Melhorar ciclo de recebimento (DSO)</p>
-                  <Progress value={40} className="h-2 mt-2" />
-                  <p className="text-xs text-gray-500 mt-1">Meta: -8 dias</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      {/* Support Section */}
-      <Card className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Suporte Enterprise
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <Clock className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Suporte 24/7</h3>
-              <p className="text-sm text-purple-100">Disponível a qualquer hora</p>
-            </div>
-            <div className="text-center">
-              <Users className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Gerente Dedicado</h3>
-              <p className="text-sm text-purple-100">João Silva - joao@financeflow.com</p>
-            </div>
-            <div className="text-center">
-              <Zap className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="font-semibold mb-1">Resposta Rápida</h3>
-              <p className="text-sm text-purple-100">Máximo 1 hora</p>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleAddUser}>
+                      Adicionar Usuário
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </AppSidebar>
     </div>
   );
 };

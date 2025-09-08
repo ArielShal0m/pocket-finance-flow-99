@@ -8,7 +8,7 @@ interface Profile {
   email: string | null;
   full_name: string | null;
   avatar_url: string | null;
-  current_plan: 'free' | 'bronze' | 'silver' | 'gold';
+  current_plan: 'free' | 'bronze' | 'silver' | 'gold' | 'enterprise';
   plan_started_at: string | null;
   created_at: string;
   updated_at: string;

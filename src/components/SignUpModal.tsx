@@ -74,7 +74,7 @@ const SignUpModal = ({ open, onOpenChange, onSwitchToLogin }: SignUpModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-white shadow-xl rounded-xl border-0">
+      <DialogContent className="max-w-sm w-[90vw] bg-white shadow-xl rounded-xl border-0">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold text-gray-800">
             Criar Conta no FinanceFlow
